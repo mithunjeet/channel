@@ -11,14 +11,16 @@ import CreateAccount from './login/createAccount.jsx'
 import OTPVerify from './login/otpverify.jsx'
 import ResendOtp from './login/resendOtp.jsx'
 import MainPage from './mainpage/MainPage.jsx'
+import ChannelCard from './channel/channelcard.jsx'
 const router = createBrowserRouter(createRoutesFromElements(
   <Route>
   <Route path = '/'        element = {<Login/>} />
   <Route path='/register'  element = {<CreateAccount/>} />
   <Route path='/verifyOtp' element = {<OTPVerify/>} /> 
   <Route path='/resendOtp' element = {<ResendOtp/>} />
-  <Route path='/mainpage'  element={<MainPage/>}  />
-    
+  <Route path='/mainpage' element={<MainPage />} />
+  <Route path='/mainpage/channel' element={<ChannelCard/>} />  
+  
   </Route>
 ))
 

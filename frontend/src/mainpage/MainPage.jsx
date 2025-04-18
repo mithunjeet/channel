@@ -1,20 +1,34 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router";
 import { Outlet } from "react-router";
+import { useNavigate } from "react-router";
 function MainPage() {
-  const [search, setSearch] = useState("");
-  const [chatInput, setChatInput] = useState("");
-  const [messages, setMessages] = useState([
-    { sender: "Bot", text: "Kaise madad karu?" },
-    { sender: "Tu", text: "Ek sawal hai" },
-  ]);
+  const [searchname, setSearch] = useState("");
+  const navigate = useNavigate();
+  async function handlesearch(e) {
+    e.preventDefault();
+    try {
+      console.log(`${import.meta.env.VITE_URL}`)
+      const { data } = await axios.get(`${import.meta.env.VITE_URL}/user/search/${searchname}`)
+      setSearch("")
+      if (data?.message === "query for user found successfully" && data?.flag === "user") {
+        navigate("/mainpage/channel", {
+          state : 
+               data?.doc[0]
+          }
+        )
+      }
+      
+      console.log(data);
+      } catch (error) {
+        console.log("error during  reaching the user in the  serach box" + error)  
+      }
+    
+   }
 
-  const bhejDe = () => {
-    if (chatInput.trim() !== "") {
-      setMessages([...messages, { sender: "Tu", text: chatInput }]);
-      setChatInput("");
-    }
-  };
+
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
@@ -24,24 +38,29 @@ function MainPage() {
   <input
     type="text"
     placeholder="search..."
-    value={search}
+    value={searchname}
     onChange={(e) => setSearch(e.target.value)}
     className="w-80 p-2 focus:outline-none"
   />
   <button
    
-    className="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 transition"
+            className="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 transition"
+            type="submit"
+            onClick={handlesearch}
   >
     Search
   </button>
 </div>
         
-        <Link to="#" className="text-lg font-semibold text-gray-700 hover:underline">
+        <Link to="#" className="text-lg font-semibold text-gray-700 hover:un">
         ⚙️ Setting
         </Link>
         <Link to="#" className="text-lg font-semibold text-gray-700 hover:underline">
         📨 Chat 
         </Link>
+        <img src="https://tse1.mm.bing.net/th?id=OIP.3V6e0wFVGP0F8RqB1SR5rQHaNK&pid=Api" alt="profile img"
+           className="h-15  w-16   object-cover rounded-full "
+        />
       </header>
       <Outlet/>
      
