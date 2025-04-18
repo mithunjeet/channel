@@ -25,7 +25,7 @@ const OtpVerify = () => {
       console.log(data)
       if (data?.message === "Account verified successfully")    
       {
-        setcookie('refreshToken' , data?.user?.refreshtoken, {
+        setcookie('refreshToken' , data , {
         path: '/',
         maxAge: 7 * 24 * 60 * 60, 
        
