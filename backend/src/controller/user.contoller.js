@@ -1,0 +1,245 @@
+import { User } from "../models/user.model.js"
+import { mail } from "../utils/email.js";
+import { generateotp } from "../utils/otp.js";
+import otpVerificationEmail from "../utils/email.js";
+import bcrypt from "bcrypt"
+
+const transporter = mail();
+
+
+const generateAccesTokenAndRefreshToken = async (userid)=>{
+  const user = await User.findById(userid)
+  const accessToken = user.generateRefreshToken({_id : user._id});
+  const refreshToken = user.generateAccesToken({_id :  user._id});
+  user.refreshtoken = refreshToken
+    
+  await user.save({validateBeforeSave : false})
+ 
+  return { accessToken, refreshToken }
+  
+}
+
+const registerUser = async (req, res, next) => {
+  try {
+
+    const { username , email , password } = req.body;
+    console.log(username);
+  
+    if (!username?.trim() || !email?.trim() || !password?.trim()) {
+      return res.status(400).json({ error: "Please fill the field correctly" });
+    }
+
+    
+    const userExists = await User.findOne({ $or: [{ email }, { username }] });
+    if (userExists) {
+      return res.status(409).json({ error: "User already exists" });
+    }
+
+
+    const otp = Math.floor(100000 + Math.random() * 800000);
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+    
+    const user = await User.create({
+      avatar: "",
+      coverimage: "",
+      username: username.toLowerCase(),
+      email,
+      password,
+      otp,
+      otpExpires,
+    });
+    
+    
+  
+    try {
+      await transporter.sendMail({
+        from: `"${process.env.APP_NAME}" <${process.env.EMAIL_USER}>`,
+
+        to: email,
+        subject: "Verify Your Account",
+        text: `Your OTP is ${otp}. It expires in 10 minutes.`,
+      });
+
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError);
+      return res.status(500).json({ error: "Failed to send OTP. Try again later." });
+    }
+
+   res.status(200).json({ message: "OTP sent to email. Verify to complete registration." });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const verifyOtp = async (req, res, next) => {
+  try {
+    const { otp, email } = req.body;
+    console.log("hiiiii");
+    console.log(otp);
+
+    const user = await User.findOne({ email });
+    if (!user) return res.json("You have typed invalid email");
+    console.log(user)
+    console.log(user.otp);
+     
+    if (user.otp != otp  ||  new Date() > user.otpExpires) {
+        return res.json("Either OTP is expired or invalid email");
+    }
+
+    const token = generateAccesTokenAndRefreshToken(user._id);
+
+    user.isverified = true;
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    user.refreshtoken = token.refreshToken;
+    await user.save({ validateBeforeSave: false });
+    
+    const userafterUpdate = await User.findOne({ email }).select({
+      password: 0,
+    });
+
+        
+    res.status(200).json({ message: "Account verified successfully", user: userafterUpdate });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
+
+
+const resendotp = async (req, res, next) => {
+  
+  const {email} = req.body;
+  console.log(email);
+
+  try {
+
+    if(!email?.trim()) {
+      
+      throw new Error("YOU HAVE TYPED WRONG EMAIL PLEASE TYPE A VALID EMAIL");
+    }
+
+    // Email validation using a simple regex pattern
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+
+    if (!emailPattern.test(email))  throw new Error("PLEASE ENTER A VALID EMAIL ADDRESS");
+    
+
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+
+      throw new Error("UNAUTHORIZED REQUEST. GO AND CREATE ACCOUNT FIRST THEN VERIFY OTP");
+
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 800000);
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save({validateBeforeSave : false});
+   
+    try {
+
+      await transporter.sendMail({
+        from: `"${process.env.APP_NAME}" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: "Verify Your Account",
+        text: `Your OTP is ${otp}. It expires in 10 minutes.`,
+      });
+
+      return res.json({ message : "OTP IS SENT TO YOUR ACCOUNT. CHECK IT OUT" });
+
+    } catch (emailError) {
+      console.error("Email sending failed:" , emailError);
+      return res.status(500).json({ error : "Failed to send OTP. Try again later." });
+    }
+
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+
+const login = async (req, res) => { 
+  
+  const { email , password} = req.body
+
+  if(!email?.trim() || !password.trim())  return res.json({ message : "please enter a valid  email and password "});
+  
+  const user = await User.findOne({email});
+  if (!user) 
+    return res.json({ message: "user not found  please enter a valid email " });
+  
+
+  // yaha par passord ko bcrypt kar ka chaeck karna hai 
+  // abhi ka leya thik hai baad mai dekhata hai 
+  
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    return res.json({
+      message: "Password is wrong. Please enter the valid password",
+      success: false,
+    });
+  }
+   
+  const otp = generateotp();
+  const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+  user.otp = otp;
+  user.otpExpires = otpExpires;
+  
+  await user.save({validateBeforeSave : false});
+   
+ 
+  try {
+    await  transporter.sendMail({
+      from: `"${process.env.APP_NAME}" <${process.env.EMAIL_USER}>`,
+
+      to: email,
+      subject: "Verify Your Account",
+      text: `Your OTP is ${otp}. It expires in 10 minutes.`,
+    });
+
+  }catch (emailError) {
+    console.error("Email sending failed:", emailError);
+    return res.status(500).json({ error: "Failed to send OTP. Try again later." });
+  }
+
+
+ res.status(200).json({ message: "OTP sent to email. Verify to compplete." , sucess : true });
+
+}
+
+const forgotpassword = async (req , res, next) => {
+   
+  try {
+      const { email } = req.body
+      if (email?.trim) return res.json("please enter vaalid email")
+      const user = await User.findOne({ email })
+      if(!user)  return res.json("user not exit  first create  account and then try again")
+      
+    const otp = generateotp();
+    user.otp = otp
+    
+    otpVerificationEmail(email, otp);
+      next()
+    } catch (error) {
+          next(error)
+    }        
+  
+
+  
+  
+}
+  
+
+export {registerUser, verifyOtp ,resendotp, login}
