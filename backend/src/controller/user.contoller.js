@@ -235,11 +235,40 @@ const forgotpassword = async (req , res, next) => {
     } catch (error) {
           next(error)
     }        
-  
-
-  
-  
 }
   
+ 
+async function searchuser(req, res) {
+  const { user } = req.params;
+   console.log("radhe")
+  console.log(user);
 
-export {registerUser, verifyOtp ,resendotp, login}
+  if (!user?.trim()) {
+    return res.json("query not valid with this name");
+  }
+
+  const doc = await User.aggregate([
+    {
+      $search: {
+        index: "default",
+        text: {
+          query: user,
+          path: {
+            wildcard: "*"
+          }
+        }
+      }
+    }
+  ]);
+  console.log(doc[0])
+  if(!doc[0]) return res.json("no user found please try valid")
+  return res.json({
+    message: "query for user found successfully",
+    flag :"user",
+    doc: doc
+  });
+}
+
+  
+
+export {registerUser, verifyOtp , resendotp, login , searchuser}
