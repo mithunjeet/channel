@@ -29,7 +29,7 @@ const OtpVerify = () => {
         path: '/',
         maxAge: 7 * 24 * 60 * 60, 
        
-        });``
+        });
         navigate('/mainpage');
       }
     } catch (error){
