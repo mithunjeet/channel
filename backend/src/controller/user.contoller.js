@@ -89,8 +89,9 @@ const verifyOtp = async (req, res, next) => {
         return res.json("Either OTP is expired or invalid email");
     }
 
-    const token = generateAccesTokenAndRefreshToken(user._id);
-
+    const token =  await generateAccesTokenAndRefreshToken(user._id);
+    console.log(token.refreshToken)
+    console.log(token.accessToken)
     user.isverified = true;
     user.otp = undefined;
     user.otpExpires = undefined;
