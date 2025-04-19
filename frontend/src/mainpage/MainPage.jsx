@@ -33,7 +33,7 @@ function MainPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       
-      <header className="flex justify-between items-center bg-white shadow px-6 py-4">
+      <header className="flex justify-between items-center bg-white text-gray-800 shadow-md px-6 py-4">
       <div className="flex items-center shadow border border-gray-300 rounded-lg overflow-hidden">
   <input
     type="text"
@@ -52,7 +52,7 @@ function MainPage() {
   </button>
 </div>
         
-        <Link to="#" className="text-lg font-semibold text-gray-700 hover:un">
+        <Link to="/mainpage/setting" className="text-lg font-semibold text-gray-700 hover:underline">
         ⚙️ Setting
         </Link>
         <Link to="#" className="text-lg font-semibold text-gray-700 hover:underline">
@@ -62,16 +62,18 @@ function MainPage() {
            className="h-15  w-16   object-cover rounded-full "
         />
       </header>
+      <main className="grow max-w-5xl mx-auto w-full px-4 py-6">
       <Outlet/>
+      </main>
      
         
 
       
-      <footer className="relative bg-white shadow p-6">
-        <div  className="flex  justify-evenly">
-          <div>hii</div>
-          <div>hii</div>
-          <div>hii</div>
+      <footer className="relative  bg-white text-gray-600 border-t border-gray-200 p-10">
+        <div  className="flex  justify-evenly   ">
+          <Link  className="hover:underline  font-extrabold"  to={"/mainpage/playlist"}>playlist</Link>
+          <Link   className="hover:underline font-extrabold" to={"/mainpage/mychannel"}>channel</Link>
+          <Link   className="hover:underline  font-extrabold"  to={"/mainpage/otherchannel"}>otherchannel</Link>
        </div>
       </footer>
     </div>

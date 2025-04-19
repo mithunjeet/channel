@@ -32,7 +32,7 @@ export default function Login() {
         </div>
         <div className="flex justify-between mb-4">
           <Link to="/register" className="text-blue-500 hover:underline">Create Account</Link>
-          <Link to="/forgot-password" className="text-blue-500 hover:underline">Forgot Password?</Link>
+          <Link to="/forgotPassword" className="text-blue-500 hover:underline">Forgot Password?</Link>
         </div>
         <div className="space-y-4">
           <input

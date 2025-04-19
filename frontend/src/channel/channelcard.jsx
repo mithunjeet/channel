@@ -17,7 +17,12 @@ const ChannelCard = () => {
         <p className="text-gray-600">
         subscriberCount
         </p>
-        <button className="bg-blue-300  w-full p-2  rounded-2xl mt-2 font-semibold hover:bg-blue-500 ">subcribed me</button>        
+        <button
+          type="submit"
+          className="bg-blue-400 w-full mt-2 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          subscribed
+        </button>       
                   
         </div>
               
