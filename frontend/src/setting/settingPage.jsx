@@ -6,7 +6,7 @@ export default function SettingsPage() {
   const [email , setEmail] = useState("")
   const handlePasswordChange = (e) => {
     e.preventDefault();
-    // call your API to update password here
+    
     console.log("New password:", password);
   };
 

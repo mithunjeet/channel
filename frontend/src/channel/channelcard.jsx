@@ -1,9 +1,9 @@
 import React from "react";
 import { useLocation } from "react-router";
 const ChannelCard = () => {
-    const location = useLocation()
-    const data = location.state
-    console.log(data)
+    // const location = useLocation()
+    // const data = location.state
+    // console.log(data)
   return (
       <>
       <div className="flex justify-center  min-h-auto bg-gray-100 p-4 m-2">
