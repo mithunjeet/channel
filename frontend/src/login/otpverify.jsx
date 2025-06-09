@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+
+import { Link , useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
  
 const OtpVerify = () => {
@@ -20,8 +21,9 @@ const OtpVerify = () => {
      e.preventDefault();
      setIsLoading(false);
      setEmail("");
-     setOtp("");
-     navigate("/verifyOtp'")
+     setOtp(new Array(6).fill(""))
+     setError("")
+    
    }
 
   async function verify(e) {
@@ -41,16 +43,15 @@ const OtpVerify = () => {
         });
         navigate('/mainpage');
       }
-    } catch (error) {
-      setError(error?.response?.data?.message)
-      console.log(error);
+    } catch (err) {
+      setError(err?.response?.data)
+      console.log(err);
     }
     finally { 
            setIsLoading(false)
     }
   }
-  if (error) {
-  console.log(error);
+  if(error){
   return (
     <div className="flex justify-center items-center h-screen w-screen">
      <div>

@@ -82,6 +82,7 @@ const verifyOtp = async (req, res, next) => {
 
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json("You have typed invalid email");
+    if (user.otp != otp) res.status(404).json("otp is incorrect");
     console.log(user)
     console.log(user.otp);
      
