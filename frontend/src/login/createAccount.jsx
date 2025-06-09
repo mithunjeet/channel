@@ -3,49 +3,56 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 export default function CreateAccount() {
   const navigate = useNavigate()
- const [username , setUsename] =  useState("")
+  const [username , setUsename] =  useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [message, setMessage] = useState("")
-  const [error, setError] = useState(null)
-  
+  const [error, setError] = useState("")
+  const [service , setService] = useState("")
+  const [isLoading ,setIsLoading] =useState(false)
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     setFormData({ ...formData, [name]: files[0] });
   };
+
   console.log(message)
+  console.log(service)
   const handleSubmit = async (e) => {
+    if(!email.trim())
+    setIsLoading(true)
     e.preventDefault();
     try {
-      const { data } = await axios.post(`http://localhost:9000/user/register`, {
-        username, email, password
+      
+      if(!email.trim() || !password.trim() || !username.trim() ||  !service.trim())  alert("please fill all field")
+      const { data } = await axios.post(`${import.meta.env.VITE_URL}/user/register`, {
+        username, email, password, service
       })
+
       setMessage(data?.message)
       console.log(message)
-      if (data?.message === "OTP sent to email. Verify to complete registration.") { 
-      navigate("/verifyOtp")
+      if (data?.message === "OTP sent to email. Verify to complete registration.") {
+        navigate("/verifyOtp")
       }
        
         
-    } catch (error) {
-      if (error.status === 409) { 
-      navigate("/verifyOtp")
-      }
-      console.log(error)
-      console.log(error?.message)
-      console.log(error?.status)
-      setError(error.message)      
-      }
+    }catch (err){
+          
+    } finally { 
+         setEmail("")
+         setPassword("")
+         setUsename("")
+         setIsLoading(false)
+    }
     
-    setEmail("")
-    setPassword("")
-    setUsename("")
+    
     
   }
-
-  return (
+   return (
     <>
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      { 
+        isLoading ? <></>
+      
+      :<div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4"> Create Account </h2>
         <form  className="space-y-4">
@@ -72,7 +79,12 @@ export default function CreateAccount() {
             onChange={(e)=> setPassword(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg"
             required
-          />
+            />
+             <select name="" id="" value={service} onChange={(e)=>{setService(e.target.value)}} className="w-full p-2 border border-gray-300 rounded-lg">
+                   <option value="">--select--</option>
+                   <option value="worker">worker</option>
+                   <option value="work provider">work provider</option>
+            </select>
           <div>
             <label className="block mb-1 text-sm">Avatar:</label>
             <input
@@ -104,6 +116,7 @@ export default function CreateAccount() {
         </form>
       </div>
     </div>
+    }
     </>
 
   );

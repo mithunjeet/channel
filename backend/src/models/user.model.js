@@ -40,7 +40,11 @@ const userSchema = new mongoose.Schema({
             type:String ,
             // required:false
         },
-        
+        service:
+        {
+            type: string,
+            required : true
+        },
         
         // watchHistory:[{ type:mongoose.Schema.Types.ObjectId, ref: "Video"}],
         

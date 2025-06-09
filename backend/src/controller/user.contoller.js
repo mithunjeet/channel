@@ -22,10 +22,10 @@ const generateAccesTokenAndRefreshToken = async (userid)=>{
 const registerUser = async (req, res, next) => {
   try {
 
-    const { username , email , password } = req.body;
+    const { username , email , password , service } = req.body;
     console.log(username);
   
-    if (!username?.trim() || !email?.trim() || !password?.trim()) {
+    if (!username?.trim() || !email?.trim() || !password?.trim() || !service.trim() ) {
       return res.status(400).json({ error: "Please fill the field correctly" });
     }
 
@@ -44,6 +44,7 @@ const registerUser = async (req, res, next) => {
       avatar: "",
       coverimage: "",
       username: username.toLowerCase(),
+      service,
       email,
       password,
       otp,
