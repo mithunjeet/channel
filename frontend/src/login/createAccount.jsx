@@ -38,8 +38,8 @@ export default function CreateAccount() {
        
         
     }catch (err){
-      console.log(err);
-      setError(err)
+      console.log(err?.response?.data.error);
+      setError(err?.response?.data.error)
     } finally { 
          setEmail("")
          setPassword("")
@@ -49,13 +49,13 @@ export default function CreateAccount() {
   }
   function handleGoBack() {
     setIsLoading(false);
-    navigate("/createAccount") 
+    navigate("/") 
   }
   if (error) {
   return (
     <div className="flex justify-center items-center h-screen w-screen">
      <div>
-      <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
+      <h1 className="font-semibold text-5xl text-red-600">{error}</h1>
         <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack}> back</button>   
      </div>
     </div>

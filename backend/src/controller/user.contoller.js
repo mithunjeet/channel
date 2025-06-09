@@ -28,7 +28,10 @@ const registerUser = async (req, res, next) => {
     if (!username?.trim() || !email?.trim() || !password?.trim() || !service.trim() ) {
       return res.status(400).json({ error: "Please fill the field correctly" });
     }
-
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
     
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
     if (userExists) {
