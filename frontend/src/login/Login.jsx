@@ -6,14 +6,25 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error , setError] = useState("")
   const navigate = useNavigate();
-
+  
+  function handleGoBack(e){ 
+    e.preventDefault();
+    setIsLoading(false);
+    setError("");
+    setEmail("");
+    setPassword("");
+    navigate("/")
+  }
   const handleLogin = async () => {
     setIsLoading(true); 
-
+    if(!email.trim() && !password.trim()) alert("please enter password and email properly")
     try {
+      console.log(email)
+      console.log(password)
       const { data } = await axios.post(`${import.meta.env.VITE_URL}/user/login`, { email, password });
-
+      console.log(data)   
       setEmail("");
       setPassword("");
 
@@ -21,11 +32,24 @@ export default function Login() {
         navigate("/verifyOtp");
       }
     } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(true);
+      console.log(error?.response?.data?.message)
+      setError(error?.response?.data?.message)   
+     }finally {
+      setIsLoading(false);
     }
   };
+  
+ if (error) {
+  console.log(error);
+  return (
+    <div className="flex justify-center items-center h-screen w-screen">
+     <div>
+      <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
+        <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack}> back</button>   
+     </div>
+    </div>
+  ); 
+}
 
   return (
     <div>

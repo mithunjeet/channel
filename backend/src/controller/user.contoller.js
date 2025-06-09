@@ -81,12 +81,12 @@ const verifyOtp = async (req, res, next) => {
     console.log(otp);
 
     const user = await User.findOne({ email });
-    if (!user) return res.json("You have typed invalid email");
+    if (!user) return res.status(404).json("You have typed invalid email");
     console.log(user)
     console.log(user.otp);
      
     if (user.otp != otp  ||  new Date() > user.otpExpires) {
-        return res.json("Either OTP is expired or invalid email");
+        return res.status(404).json("Either OTP is expired or invalid email");
     }
 
     const token =  await generateAccesTokenAndRefreshToken(user._id);
@@ -175,11 +175,11 @@ const login = async (req, res) => {
   
   const { email , password} = req.body
 
-  if(!email?.trim() || !password.trim())  return res.json({ message : "please enter a valid  email and password "});
+  if(!email?.trim() || !password.trim())  return res.status(404).json({ message : "please enter a valid  email and password "});
   
   const user = await User.findOne({email});
   if (!user) 
-    return res.json({ message: "user not found  please enter a valid email " });
+    return res.status(404).json({ message: "user not found  please enter a valid email " });
   
 
   // yaha par passord ko bcrypt kar ka chaeck karna hai 
@@ -187,7 +187,7 @@ const login = async (req, res) => {
   
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    return res.json({
+    return res.status(404).json({
       message: "Password is wrong. Please enter the valid password",
       success: false,
     });

@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
-import { createBrowserRouter , createRoutesFromElements } from 'react-router'
-import { Route } from 'react-router'
-import { Router, RouterProvider } from 'react-router'
+import { createBrowserRouter , createRoutesFromElements, Route , RouterProvider } from 'react-router'
+// import { Route } from 'react-router'
+
 import Login from './login/Login.jsx'
 import CreateAccount from './login/createAccount.jsx'
 import OTPVerify from './login/otpverify.jsx'

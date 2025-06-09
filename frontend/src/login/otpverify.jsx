@@ -7,6 +7,7 @@ const OtpVerify = () => {
   
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
+  const [isLoading , setIsLoading] = useState(false)
   const navigate = useNavigate();
   const [cookies, setcookie, removecookie] = useCookies(['refreshToken']);
   const handleChange = (value, index) => {
@@ -14,31 +15,63 @@ const OtpVerify = () => {
     updatedOtp[index] = value;
     setOtp(updatedOtp);
   };
+   function handleGoBack(e) { 
+     e.preventDefault();
+     setIsLoading(false);
+     setEmail("");
+     setOtp("");
+     navigate("//verifyOtp'")
+   }
 
   async function verify(e) {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_URL}/user/verifyotp`, {
         email,
-        otp: otp.join("")  
+        otp : otp.join("")
       });
       console.log(data)
-      if (data?.message === "Account verified successfully")    
-      {
-        setcookie('refreshToken' , data , {
-        path: '/',
-        maxAge: 7 * 24 * 60 * 60, 
+      if (data?.message === "Account verified successfully") {
+        setcookie('refreshToken', data, {
+          path: '/',
+          maxAge: 7 * 24 * 60 * 60,
        
         });
         navigate('/mainpage');
       }
-    } catch (error){
+    } catch (error) {
+      setEmail(error?.response?.data?.message)
       console.log(error);
     }
+    finally { 
+           setIsLoading(false)
+    }
   }
+  if (error) {
+  console.log(error);
+  return (
+    <div className="flex justify-center items-center h-screen w-screen">
+     <div>
+      <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
+        <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack}> back</button>   
+     </div>
+    </div>
+  ); 
+}
+
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 font-sans">
+    <>
+      {
+      isLoading  === true?
+      <div className="flex  justify-center  items-center  w-screen h-screen">
+      <h1 className="text-5xl font-bold text-green-600">
+      loading<span className="animate-ping">...</span>
+      </h1>
+      </div>
+      
+      : <div className="flex items-center justify-center min-h-screen bg-gray-100 font-sans">
       <div className="text-center">
         <h2 className="text-2xl font-semibold mb-6">Enter OTP</h2>
 
@@ -72,6 +105,8 @@ const OtpVerify = () => {
         <Link  to={"/"}  className='text-xl  text-red-400'> resend otp</Link>
       </div>
     </div>
+      }
+    </>
   );
 };
 
