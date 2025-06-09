@@ -7,7 +7,8 @@ const OtpVerify = () => {
   
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
-  const [isLoading , setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error , setError] = useState("")
   const navigate = useNavigate();
   const [cookies, setcookie, removecookie] = useCookies(['refreshToken']);
   const handleChange = (value, index) => {
@@ -20,7 +21,7 @@ const OtpVerify = () => {
      setIsLoading(false);
      setEmail("");
      setOtp("");
-     navigate("//verifyOtp'")
+     navigate("/verifyOtp'")
    }
 
   async function verify(e) {
@@ -41,7 +42,7 @@ const OtpVerify = () => {
         navigate('/mainpage');
       }
     } catch (error) {
-      setEmail(error?.response?.data?.message)
+      setError(error?.response?.data?.message)
       console.log(error);
     }
     finally { 
