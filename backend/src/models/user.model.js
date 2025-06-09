@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
         },
         service:
         {
-            type: string,
+            type: String,
             required : true
         },
         

@@ -18,12 +18,14 @@ export default function CreateAccount() {
   console.log(message)
   console.log(service)
   const handleSubmit = async (e) => {
-    if(!email.trim())
+    if (!email.trim() || !password.trim() || !username.trim() || !service.trim())
+    {  
+      alert("please fill all field")
+      return
+    }
     setIsLoading(true)
     e.preventDefault();
     try {
-      
-      if(!email.trim() || !password.trim() || !username.trim() ||  !service.trim())  alert("please fill all field")
       const { data } = await axios.post(`${import.meta.env.VITE_URL}/user/register`, {
         username, email, password, service
       })
@@ -36,21 +38,39 @@ export default function CreateAccount() {
        
         
     }catch (err){
-          
+      console.log(err);
+      setError(err)
     } finally { 
          setEmail("")
          setPassword("")
          setUsename("")
          setIsLoading(false)
     }
-    
-    
-    
   }
+  function handleGoBack() {
+    setIsLoading(false);
+    navigate("/createAccount") 
+  }
+  if (error) {
+  return (
+    <div className="flex justify-center items-center h-screen w-screen">
+     <div>
+      <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
+        <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack}> back</button>   
+     </div>
+    </div>
+  ); 
+}
+
    return (
     <>
       { 
-        isLoading ? <></>
+     isLoading ?
+     <div className="flex  justify-center  items-center  w-screen h-screen">
+     <h1 className="text-5xl font-bold text-green-600">
+     loading<span className="animate-ping">...</span>
+     </h1>
+     </div>
       
       :<div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
@@ -122,3 +142,4 @@ export default function CreateAccount() {
   );
 }
 
+  
