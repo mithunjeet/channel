@@ -30,7 +30,7 @@ function MainPage() {
         data?.flag === "user"
       ) {
         navigate("/mainpage/userprofile", {
-          state: data?.doc[0],
+          state: data?.doc
         });
       }
     } catch (error) {

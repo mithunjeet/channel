@@ -32,9 +32,9 @@ const router = createBrowserRouter(createRoutesFromElements(
     
   <Route path="/mainpage" element={<MainPage />}>
   <Route path="userprofile" element={<JobSeekerProfile/>} />
-  <Route path='report' element={<ReportUserForm />}/>
-  <Route path='rate' element={<RateUserForm />} />
-  <Route path='comment' element={<Comment />} />   
+  <Route path='report/:id' element={<ReportUserForm />}/>
+  <Route path='rate/:id' element={<RateUserForm />} />
+  <Route path='comment/:id' element={<Comment />} />   
   <Route path='applyjob' element={<JobApplicationForm/>} />
   <Route path='dashboard' element={<JobSeekerDashboard />} />
   <Route path="setting" element={<SettingsPage />} />        

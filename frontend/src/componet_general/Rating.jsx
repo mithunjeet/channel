@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-
+import { useParams } from 'react-router-dom';
 export default function RateUserForm() {
   const [rating, setRating] = useState('');
   const [feedback, setFeedback] = useState('');
-
+  const { id } = useParams()
+  console.log(id)
   const handleSubmit = (e) => {
     e.preventDefault();
 

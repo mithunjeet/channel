@@ -36,10 +36,14 @@ const OtpVerify = () => {
       });
       console.log(data)
       if (data?.message === "Account verified successfully") {
-        setcookie('refreshToken', data, {
-          path: '/',
-          maxAge: 7 * 24 * 60 * 60,
+        // setcookie('refreshToken', data, {
+        //   path: '/',
+        //   maxAge: 7 * 24 * 60 * 60,
        
+        // });
+        cookies.set('refreshToken', user.refreshtoken, {
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60, 
         });
         navigate('/mainpage');
       }

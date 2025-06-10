@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-
+import { useParams } from 'react-router-dom'; 
 export default function Comment() {
   const [comments, setComments] = useState([]);
   const [inputComment, setInputComment] = useState('');
-
-
+  const { id } = useParams();
+  console.log(id)
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!inputComment.trim()) {

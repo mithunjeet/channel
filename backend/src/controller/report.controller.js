@@ -1,12 +1,12 @@
-import { Report } from "../models/report.model";
+import { Report } from "../models/report.model.js";
 
-const reportUser = async (req, res) => {
-    const { content, reason, user, _id } = req.body;
-
+export const reportUser = async (req, res) => {
+    const { content, reason, user } = req.body;
+     // req.user is giving during jwt verification 
     if (!content.trim() || !reason.trim()) 
         return res.status(404).json("please fill all fields properly");
 
-    if (!_id || !user) 
+    if (!user) 
         return res.status(500).json("some internal server error");
 
     try {
@@ -14,7 +14,7 @@ const reportUser = async (req, res) => {
             content,
             reason,
             user: user,
-            owner: _id
+            owner: req.user._id
         });
 
         return res.status(200).json("You have reported successfully. Please be patient while we take action.");
@@ -23,3 +23,4 @@ const reportUser = async (req, res) => {
         return res.status(500).json("Something went wrong while submitting your report.");
     }
 };
+

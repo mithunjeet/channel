@@ -1,21 +1,26 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import axios from "axios";
 export default function ReportUserForm() {
   const [reason, setReason] = useState('');
   const [details, setDetails] = useState('');
-
-  const handleSubmit = (e) => {
+  const [cookies , setcookies ] = useCookies([ 'refreshToken']);
+  const { id } = useParams()
+  // console.log(id)
+  const  handleSubmit = async (e) => {
+    if(!reason.trim() || !details.trim()) alert("all field are required")
     e.preventDefault();
-
-    if(!reason){
-        
-      alert('Please select a reason for reporting.');
-      return;
-        
-    }
-
-   
-    alert('Report submitted successfully.');
-
+    console.log(cookies)
+     try {
+       const { data } = await axios.post(`${import.meta.env.VITE_URL}/report/reportUser`, { reason, details, user: id },
+        {headers: { Authorization: `Bearer ${cookies.refreshToken}` } })
+       console.log(data);
+     } catch (error) {
+        console.log(error)
+     }finally {
+              
+     } 
     setReason('');
     setDetails('');
   };

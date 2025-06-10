@@ -22,5 +22,7 @@ app.use(express.urlencoded({
     extended:true
 }))
 
-import {userRouter} from "./routes/user.routes.js"
-app.use("/user" , userRouter)
+import { userRouter } from "./routes/user.routes.js"
+import { reportuser } from "./routes/report.routes.js"
+app.use("/user", userRouter)
+app.use("/report", reportuser)

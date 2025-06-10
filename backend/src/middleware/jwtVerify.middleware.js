@@ -8,7 +8,6 @@ import { User } from "../models/user.model.js";
         
         const token = req.cookies?.refreshToken || req.header("Authorization")?.replace("Bearer ", "")
         
-        console.log("hii from req.header" + req.header)
 
         if(!token)   return res.status(401).json({"message" : "TOKEN NOT FOUND"})  
         if (token) { 
