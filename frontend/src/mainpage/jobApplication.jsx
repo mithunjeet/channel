@@ -49,7 +49,7 @@ export default function JobApplicationForm() {
       <h2 className="text-2xl font-bold text-gray-800 mb-2">job apply </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
+        <input
           type="text"
           name="village"
           placeholder="Village"
@@ -58,14 +58,14 @@ export default function JobApplicationForm() {
            className ="input border border-gray-300 
             rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <select className={classutility} value={selectedState} onChange={(e) => { setSelectedState(e.target.value);  setSelectedDistrict("")}}>
+        <select name="state" className={classutility} value={selectedState} onChange={(e) => { setSelectedState(e.target.value);  setSelectedDistrict("")}}>
           <option value="" >-- select your state --</option>
           {location.states.map((obj , idx)=>{
             return (<option key={idx} value={obj.state} className="text-blue-500 font-semibold" >{obj.state}</option>)
           })}
         </select>
 
-        <select name="" id="" className={classutility} value={selectedDistrict} onChange={(e) => { setSelectedDistrict(e.target.value); }}>
+        <select name="district" id="" className={classutility} value={selectedDistrict} onChange={(e) => { setSelectedDistrict(e.target.value); }}>
         <option value="">--select district--</option>
          {
             districtopt.map((ele , idx ) => {
@@ -110,7 +110,7 @@ export default function JobApplicationForm() {
       </div>
 
       <textarea
-        name="jobDescription"
+        name="jobcommitment"
         placeholder="Job Description (What work you want to do)"
         value={formData.jobcommitment}
         onChange={handleChange}
