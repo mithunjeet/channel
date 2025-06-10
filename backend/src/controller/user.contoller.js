@@ -229,9 +229,9 @@ const forgotpassword = async (req , res, next) => {
    
   try {
       const { email } = req.body
-      if (email?.trim) return res.json("please enter vaalid email")
+      if (email?.trim) return res.status(404).json("please enter valid email")
       const user = await User.findOne({ email })
-      if(!user)  return res.json("user not exit  first create  account and then try again")
+      if(!user)  return res.status(400).json("user not exit  first create  account and then try again")
       
     const otp = generateotp();
     user.otp = otp

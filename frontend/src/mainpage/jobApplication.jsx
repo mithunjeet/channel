@@ -1,25 +1,39 @@
 import React, { useState } from "react";
-
+import { roles, location } from "../location_data";
+import { useEffect } from "react";
 export default function JobApplicationForm() {
   const [selectedState, setSelectedState] = useState("");
-  const [selectedDistrict , setSelectedDistrict]=useState("")
+  const [selectedDistrict, setSelectedDistrict] = useState("")
+  const [role, setRole] = useState("");
+  const [districtopt, setDistrictOpt] = useState([]);
   const [formData, setFormData] = useState({
-    name: "",
-    contact: "",
+    
     village: "",
-    area: "",
     district: "",
     state: "",
-    jobSearch: "",
-    currentWages: "",
-    expectedWages: "",
-    jobDescription: "",
-    workRangeKm: "",
+    role : "",
+    currentWages: 0,
+    expectedWages:0,
+    jobcommitment: "",
+    workRangeKm: 0,
   });
-
+  
   const handleChange = (e) => {
+    e.preventDefault()
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    if(selectedState !== ""){ 
+       location.states.map((obj , idx) =>{
+        if(obj.state === selectedState) {
+          setDistrictOpt(obj.districts)
+        
+        }})}
+    else {
+      setDistrictOpt([]);
+        }
+  },[selectedState, setSelectedState])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,71 +49,37 @@ export default function JobApplicationForm() {
       <h2 className="text-2xl font-bold text-gray-800 mb-2">job apply </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
-         className ="input border border-gray-300 
-                  rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="text"
-          name="contact"
-          placeholder="Contact Number"
-          value={formData.contact}
-          onChange={handleChange}
-           className ="input border border-gray-300 
-                  rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-
-        <input
+          <input
           type="text"
           name="village"
           placeholder="Village"
           value={formData.village}
           onChange={handleChange}
            className ="input border border-gray-300 
-                  rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <input
-                  type="text"
-                  name="area"
-                  placeholder="Area"
-                  value={formData.area}
-                  onChange={handleChange}
-                  className ="input border border-gray-300 
-                  rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="text"
-          name="district"
-          placeholder="District"
-          value={formData.district}
-          onChange={handleChange}
-           className ="input border border-gray-300 
-                  rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="text"
-          name="state"
-          placeholder="State"
-          value={formData.state}
-          onChange={handleChange}
-          className ="input border border-gray-300 
-                  rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <select className={classutility} value={selectedState} onChange={(e) => { setSelectedState(e.target.value);  setSelectedDistrict("")}}>
+          <option value="" >-- select your state --</option>
+          {location.states.map((obj , idx)=>{
+            return (<option key={idx} value={obj.state} className="text-blue-500 font-semibold" >{obj.state}</option>)
+          })}
+        </select>
 
-        <input
-          type="text"
-          name="jobSearch"
-          placeholder="Job Searching For"
-          value={formData.jobSearch}
-          onChange={handleChange}
-          className ="input border border-gray-300 
-                  rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <select name="" id="" className={classutility} value={selectedDistrict} onChange={(e) => { setSelectedDistrict(e.target.value); }}>
+        <option value="">--select district--</option>
+         {
+            districtopt.map((ele , idx ) => {
+              return (<option key={idx} value={ele}  className="text-blue-600 font-semibold">{ ele}</option>)
+             })
+         }
+        </select>
+        <select className={classutility} name="" id="" value={role} onChange={(e)=>setRole(e.target.value)}>
+          <option value="">--role--</option>
+          {roles.map((ele , idx) => {
+           return (<option key={idx} value={ele} className="text-blue-600 font-semibold"> {ele}</option>) 
+          })}
+        </select>
+      
         <input
           type="number"
           name="currentWages"
@@ -132,7 +112,7 @@ export default function JobApplicationForm() {
       <textarea
         name="jobDescription"
         placeholder="Job Description (What work you want to do)"
-        value={formData.jobDescription}
+        value={formData.jobcommitment}
         onChange={handleChange}
         rows={4}
         className="input w-full"
@@ -147,3 +127,6 @@ export default function JobApplicationForm() {
     </form>
   );
 }
+
+
+const classutility  =  "input border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500";
