@@ -82,15 +82,16 @@ const verifyOtp = async (req, res, next) => {
   try {
     const { otp, email } = req.body;
     console.log("hiiiii");
-    console.log(otp);
-
+    console.log(otp)
+    console.log(typeof (otp));
+    const updatedotp = Number(otp)
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json("You have typed invalid email");
-    if (user.otp != otp) res.status(404).json("otp is incorrect");
+    if (user.otp !== updatedotp) return res.status(404).json("otp is incorrect");
     console.log(user)
     console.log(user.otp);
      
-    if (user.otp != otp  ||  new Date() > user.otpExpires) {
+    if ( new Date() > user.otpExpires) {
         return res.status(404).json("Either OTP is expired or invalid email");
     }
 

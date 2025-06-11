@@ -1,31 +1,31 @@
 
-import { User } from "../models/user.model";
-import { Rating } from "../models/rating.model";
+import { User } from "../models/user.model.js";
+import { Rating } from "../models/rating.model.js";
+import mongoose from "mongoose";
 
-
-const registerRating = async(req, res)=>{
-const { feedback, value, _id, user} = req.body;
-  
-  const str = value.toString();
-  if (!feedback.trim() || !str.trim() || !_id || !user)
-    return res.status(404).json("please enter all fields properly");
-
+export const registerRating = async(req, res)=>{
+const { feedback, value, user } = req.body;
+console.log(req.body)
+console.log(typeof (value))  
+const str = value.toString();
+if (!feedback.trim() || !str.trim()) return res.status(404).json("please enter all fields properly");
+if (!user) return res.status(500).json("some internal error");
   const useralreadyrated = await Rating.aggregate([
     {
       $match :{
-        owner:new mongoose.Types.ObjectId(_id),
+        owner:new mongoose.Types.ObjectId(req.user._id),
         user:new mongoose.Types.ObjectId(user)
       }
     }
   ]);
 
   if (useralreadyrated.length)
-    return res.status(400).json("You have already rated this person");
+    return res.status(404).json("sorry You have already rated this person already !!");
 
   const rated = await Rating.create({
     feedback,
-    value,
-    owner: _id,
+    value : Number(value),
+    owner:req.user._id,
     user: user
   });
 
@@ -57,5 +57,3 @@ const getAllRatingOfUser = async (req, res) => {
 
     return res.status(200).json({ data: rating });
 };
-
-export default {registerRating , getAllRatingOfUser}

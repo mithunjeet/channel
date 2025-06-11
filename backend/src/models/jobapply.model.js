@@ -1,16 +1,16 @@
 
 import mongoose from "mongoose";
-import { User } from "./user.model";
+import { User } from "./user.model.js";
 const jobApplySchema = mongoose.Schema({
-    user : {
+    owner : {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
-    currentWage: {
+    currentWages: {
        type: Number,
        required : true 
     },
-    expectedWage: {
+    expectedWages: {
         type: Number,
         required: true
     },

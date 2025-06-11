@@ -1,33 +1,67 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams ,Link} from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 export default function RateUserForm() {
-  const [rating, setRating] = useState('');
+  const [value, setValue] = useState("");
   const [feedback, setFeedback] = useState('');
+  const [cookies, setcookies] = useCookies();
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
   const { id } = useParams()
+  const navigate = useNavigate()
   console.log(id)
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!rating){
-      alert('Please select a rating before submitting.');
+    if(!feedback.trim() || !value.trim()){
+      alert('Please select all filed before submitting.');
       return;
     }
-    console.log(rating)
-    const ratingData = {   
-      rating: Number(rating),
-      feedback
-    };
-
-    console.log('Rating Submitted:' , ratingData);
-    alert('Thank you for rating!');
-
+    setIsLoading(true);
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_URL}/rate/rateUser`, {
+         user:id , value , feedback
+      },{
+          headers: {
+           Authorization : `Bearer ${cookies.refreshToken?.user?.refreshtoken}`
+        }
+      })
+      console.log(data);
+      alert("thanks for rate me")
+    } catch (err) {
+      setError(err?.response?.data);
+      console.log(error)
+    } finally {
+       setIsLoading(false)    
+    }
     
-    setRating('');
+    setValue('');
     setFeedback('');
   };
-
+  function handleGoBack() { 
+    setIsLoading(false); 
+    navigate(-1); // it will move one history back
+  }
+  if (error) {
+  console.log(error);
   return (
-    <form
+    <div className="flex justify-center items-center h-screen w-full">
+     <div>
+      <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
+        <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack} > back</button>   
+     </div>
+    </div>
+  ); 
+}
+  return (
+    <>
+      {isLoading ?
+       <div className="flex  justify-center  items-center  w-full h-screen">
+       <h1 className="text-5xl font-bold text-green-600">
+       loading<span className="animate-ping">...</span></h1> </div> :
+      <form
       onSubmit={handleSubmit}
       className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md mt-10 space-y-4"
     >
@@ -36,8 +70,8 @@ export default function RateUserForm() {
       <div>
         <label className="block mb-1 text-gray-700">Select Rating</label>
         <select
-          value={rating}
-          onChange={(e) => setRating(e.target.value)}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           className="w-full p-2 border rounded"
           required
         >
@@ -67,6 +101,6 @@ export default function RateUserForm() {
       >
         Submit Rating
       </button>
-    </form>
+    </form> }    </>
   );
 }

@@ -24,5 +24,9 @@ app.use(express.urlencoded({
 
 import { userRouter } from "./routes/user.routes.js"
 import { reportuser } from "./routes/report.routes.js"
+import { ratingRouter } from "./routes/rating.routes.js"
+import { applyJob } from "./routes/jobApply.route.js"
 app.use("/user", userRouter)
 app.use("/report", reportuser)
+app.use("/rate", ratingRouter)
+app.use("/apply", applyJob)
