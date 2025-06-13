@@ -22,6 +22,7 @@ import RateUserForm from './componet_general/Rating.jsx'
 import Comment from './componet_general/Comment.jsx'
 import JobSeekerDashboard from './mainpage/jobSeekerDashbard.jsx'
 import JobApplicationForm from './mainpage/jobApplication.jsx'
+import JobApplicationPgae from './mainpage/jobApplicationPage.jsx'
 const router = createBrowserRouter(createRoutesFromElements(
   <Route>
   <Route path='/' element={<Login />} />
@@ -31,6 +32,7 @@ const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/resendOtp' element={<ResendOtp />} />
     
   <Route path="/mainpage" element={<MainPage />}>
+  <Route path='jobApplicant' element={<JobApplicationPgae/> } />    
   <Route path="userprofile" element={<JobSeekerProfile/>} />
   <Route path='report/:id' element={<ReportUserForm />}/>
   <Route path='rate/:id' element={<RateUserForm />} />

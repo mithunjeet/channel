@@ -49,4 +49,81 @@ export const jobApply = async (req, res) => {
   }
 };
 
-  
+
+export const getAllJobApplicant = async (req, res) => {
+  const { village, state, district, role } = req.query;
+
+  console.log(req.query);
+
+  try {
+
+    if (!village?.trim() || !state?.trim() || !district?.trim()) {
+      return res.status(404).json(" all fields  are required");
+    }
+
+    const arr = [
+      {
+        text: {
+          query: village,
+          path: "village",
+          fuzzy: {
+            maxEdits: 2,
+            prefixLength: 0,
+            maxExpansions: 50
+          }
+        }
+      }
+    ];
+
+    if (role?.trim()) {
+      shouldConditions.push({
+        text: {
+          query: role,
+          path: "role"
+        }
+      });
+    }
+
+    const data = await JobApply.aggregate([
+      {
+        $search: {
+          index: "default",
+          compound: {
+            must: [
+              {
+                text: {
+                  query: state,
+                  path: "state"
+                }
+              },
+              {
+                text: {
+                  query: district,
+                  path: "district"
+                }
+              }
+            ],
+            should: arr
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "AlldataofAPplicant"
+        }
+      }
+    ]);
+
+    return res.status(200).json(data);
+  } catch (error) {
+    
+    return res.status(500).json("internal server error! something went wrong during search.");
+  }
+};
+
+
+//1. Use MongoDB Atlas Full-Text Search (with Fuzzy Matching)
+// If you're using MongoDB Atlas, it supports full-text search with fuzzy matching using Lucene under the hood.

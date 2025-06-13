@@ -7,7 +7,7 @@ import { User } from "../models/user.model.js";
     try {
         
         const token = req.cookies?.refreshToken || req.header("Authorization")?.replace("Bearer ", "")
-        console.log(req.header)
+        console.log("hii frm jwt verify")
         if(!token)   return res.status(401).json({"message" : "TOKEN NOT FOUND"})  
         if (token) { 
             const decoded_token = jwt.verify(token, process.env.TokenSecreat);
