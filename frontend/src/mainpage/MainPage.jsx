@@ -30,6 +30,10 @@ function MainPage() {
         `${import.meta.env.VITE_URL}/user/search/${searchname}`
       );
       setSearch("");
+      console.log(typeof(data));
+      if (typeof(data) == "string"){
+        return alert("no user find with this name try another name !!")
+      }
       if (
         data?.message === "query for user found successfully" &&
         data?.flag === "user"

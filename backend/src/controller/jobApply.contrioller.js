@@ -127,3 +127,60 @@ export const getAllJobApplicant = async (req, res) => {
 
 //1. Use MongoDB Atlas Full-Text Search (with Fuzzy Matching)
 // If you're using MongoDB Atlas, it supports full-text search with fuzzy matching using Lucene under the hood.
+
+export const allJobApplicationOfParticularUser = async (req, res) => {
+  const { _id } = req.params;
+
+  try {
+    const userAllApplication = await jobApply.aggregate([
+      {
+        $match: {
+          owner: new mongoose.Types.ObjectId(_id), 
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "alldetails", 
+        },
+      },
+    ]);
+
+    return res.status(200).json(userAllApplication);
+  } catch (error) {
+    return res.status(500).json({ message: "error  getting job applications", error });
+  }
+}
+
+
+
+export const deleteJobApplicant = async (req, res) => {
+  const { _id } = req.params;
+  try {
+    const deletedoc = await JobApply.findByIdAndDelete(_id);
+    if (!deletedoc) return res.status(404).json("document not deleted");
+    return res.status(200).json("deleted successfully");
+  } catch (error) {
+    return res.status(500).json({ message: "error during job deletion", error });
+  }
+}
+
+
+export const jobMelGayaHaiToCallBandKarDO = async (req, res) => {
+  const { _id } = req.params;
+  try {
+    const data = await JobApply.findById(_id); 
+    if (!data) return res.status(404).json("Document not found");
+
+    data.flag = !data.flag;
+    await data.save({ validateBeforeSave: false });
+
+    return res.status(200).json("updated successfully");
+  } catch (error) {
+    return res.status(500).json("error during updation");
+  }
+}
+
+

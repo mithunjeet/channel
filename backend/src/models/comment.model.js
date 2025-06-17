@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { User } from "./user.model";
+import { User } from "./user.model.js";
 const commentSchema = new mongoose.Schema({
     content: {
         type: String
@@ -7,6 +7,10 @@ const commentSchema = new mongoose.Schema({
     
     owner: {
         type: mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
+    user: {
+        type: mongoose.Types.ObjectId,
         ref:"User"
     }
     
