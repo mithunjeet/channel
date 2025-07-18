@@ -129,12 +129,11 @@ export const getAllJobApplicant = async (req, res) => {
 // If you're using MongoDB Atlas, it supports full-text search with fuzzy matching using Lucene under the hood.
 
 export const allJobApplicationOfParticularUser = async (req, res) => {
-  const { _id } = req.params;
-
+  const { _id } = req.params
   try {
     const userAllApplication = await jobApply.aggregate([
       {
-        $match: {
+        $match : {
           owner: new mongoose.Types.ObjectId(_id), 
         },
       },
@@ -149,8 +148,8 @@ export const allJobApplicationOfParticularUser = async (req, res) => {
     ]);
 
     return res.status(200).json(userAllApplication);
-  } catch (error) {
-    return res.status(500).json({ message: "error  getting job applications", error });
+  } catch(error) {
+    return res.status(500).json({ message : " error getting job applications ", error });
   }
 }
 
@@ -184,3 +183,35 @@ export const jobMelGayaHaiToCallBandKarDO = async (req, res) => {
 }
 
 
+export const allJobApplicationToYourCurrentArea = async (req, res) => {
+  const { state, district } = req.query;
+console.log(req.query)
+ 
+
+  try {
+    const allJobToYourLOcation = await JobApply.aggregate([
+      {
+        $match: {
+          state: state.toLowerCase(),
+          district: district.toLowerCase(),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "alldetails",
+        },
+      },
+    ]);
+
+    return res.status(200).json(allJobToYourLOcation);
+  } catch (error) {
+   
+    return res.status(500).json({
+      message: "Error during finding jobs in your location",
+      error: error.message,
+    });
+  }
+};

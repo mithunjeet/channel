@@ -33,27 +33,24 @@ if (!user) return res.status(500).json("some internal error");
 };
 
 
-const getAllRatingOfUser = async (req, res) => {
-    const { _id } = req.body;
+export const calculateRating = async (req, res) => {
+    const {_id} = req.body;
 
-    if (!_id) 
-        return res.status(500).json("sorry we are unable to get all rating of user, internal error");
+ if (!_id) return res.status(500).json("sorry we are unable to get all rating of user, internal error");
+ const rating = await Rating.aggregate([
+  {
+    $match: {
+      user: new mongoose.Types.ObjectId(_id)
+    }
+  },
+  {
+    $group: {
+      _id: "$user",
+      averageRating: { $avg: "$value"},
+      totalRating: { $sum : 1 }
+    }
+  }]);
 
-    const rating = await Rating.aggregate([
-        {
-            $match: {
-                user: new mongoose.Types.ObjectId(_id)
-            }
-        },
-        {
-            $lookup: {
-                from: "users",
-                localField: "user",
-                foreignField: "_id",
-                as: "userDetails"
-            }
-        }
-    ]);
-
-    return res.status(200).json({ data: rating });
+       
+    return res.status(200).json(rating);
 };

@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
 
         type:String,
         required:true,
-        unique:true,
         lowercase:true,
         index:true,
         trim : true
@@ -46,6 +45,15 @@ const userSchema = new mongoose.Schema({
             required : true
         },
         
+        state: {
+           type: String, 
+           required  : true
+        }, 
+        district: {
+            type: String, 
+             required  : true 
+        },
+       
         // watchHistory:[{ type:mongoose.Schema.Types.ObjectId, ref: "Video"}],
         
         refreshtoken:{

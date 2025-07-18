@@ -3,6 +3,8 @@ import { mail } from "../utils/email.js";
 import { generateotp } from "../utils/otp.js";
 import otpVerificationEmail from "../utils/email.js";
 import bcrypt from "bcrypt"
+import { cloudinaryUpload } from "../utils/cloudinary.upload.js";
+
 
 const transporter = mail();
 
@@ -22,10 +24,12 @@ const generateAccesTokenAndRefreshToken = async (userid)=>{
 const registerUser = async (req, res, next) => {
   try {
 
-    const { username , email , password , service } = req.body;
+    const { username , email , password , service , state , district } = req.body;
     console.log(username);
-  
-    if (!username?.trim() || !email?.trim() || !password?.trim() || !service.trim() ) {
+    console.log(service)
+    console.log(state)
+    console.log(district)
+    if (!username?.trim() || !email?.trim() || !password?.trim() || !service.trim() || !state || !district ) {
       return res.status(400).json({ error: "Please fill the field correctly" });
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,7 +37,8 @@ const registerUser = async (req, res, next) => {
       return res.status(400).json({ error: "Invalid email format" });
     }
     
-    const userExists = await User.findOne({ $or: [{ email }, { username }] });
+    // const userExists = await User.findOne({ $or: [{ email }, { username }] });
+      const userExists = await User.findOne({email });
     if (userExists) {
       return res.status(409).json({ error: "User already exists" });
     }
@@ -48,6 +53,8 @@ const registerUser = async (req, res, next) => {
       coverimage: "",
       username: username.toLowerCase(),
       service,
+      state, 
+      district,
       email,
       password,
       otp,
@@ -276,6 +283,59 @@ async function searchuser(req, res) {
   });
 }
 
-  
 
-export {registerUser, verifyOtp , resendotp, login , searchuser}
+
+const changePassword = async (req, res) => {
+  const {password , email} = req.body
+  // console.log(req.body)
+  if (!password?.trim()) {
+    return res.status(404).json("type a valid password")
+  }
+
+  if (!email?.trim()) {
+    return res.status(404).json("type a valid email")
+  }
+
+  const doc = await User.findOne({ _id: req.user._id })
+
+  if (!doc) {
+    return res.status(404).json("user not found")
+  }
+    console.log(doc.email)
+  if (doc.email !== email) {
+    return res.status(404).json("Your current email is incorrect. You may be trying to change the password of another account.")
+  }
+
+  doc.password = await bcrypt.hash(password, 10)
+  await doc.save({ validateBeforeSave: false })
+
+  return res.status(200).json("Password has been updated successfully")
+
+}
+
+
+const uploadAvatar = async (req, res) => {
+ console.log("hi from upload avatar controller");
+
+  const localPathOfAvatar = req.file?.path
+
+  if (!localPathOfAvatar) {
+    return res.status(404).json({ error: "Local path of avatar not found" });
+  }
+
+  const avatarResponseByCloudinary = await cloudinaryUpload(localPathOfAvatar);
+  if (!avatarResponseByCloudinary) {
+    return res.status(500).json({ error: "error occurred during the upload to Cloudinary" });
+  }
+
+  const doc = await User.findById(req.user._id)
+  if (!doc) return res.status(401).json({ error: "unauthorized request" })
+
+  doc.avatar = avatarResponseByCloudinary.url
+  await doc.save({ validateBeforeSave: false })
+
+  return res.status(200).json("avatar has been uploaded successfully");
+}
+
+
+export {registerUser, verifyOtp , resendotp, login , searchuser, changePassword , uploadAvatar}
