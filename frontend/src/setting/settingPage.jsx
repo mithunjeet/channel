@@ -1,12 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
-
+import { useRef } from "react";
 export default function SettingsPage() {
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [email, setEmail] = useState("")
-  const [cookies , setCookies] = useCookies()
+  const [cookies, setCookies] = useCookies()
+  const [isUploading , setIsUploading] = useState(false)
+   const fileInputRef = useRef(null)
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
@@ -16,6 +18,7 @@ export default function SettingsPage() {
     const confirm = window.confirm("Are you sure want to change passowrd ?")
     if (!confirm) return;  
     try {
+      
       const { data } = await axios.patch(
         `${import.meta.env.VITE_URL}/user/changePassword`,
          {email, password},{
@@ -48,11 +51,17 @@ const handleAvatarUpload = async (e) => {
     alert("File has not  selected")
     return;
   }
-
+    const handleAvatarReset = () => {
+    setAvatar(null); // clear preview
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "" 
+    }
+  };
   const formData = new FormData()
   formData.append("avatar", avatar)
 
   try {
+    setIsUploading(true)
     const { data } = await axios.post(
       `${import.meta.env.VITE_URL}/user/uploadAvatar`,
       formData,
@@ -69,7 +78,8 @@ const handleAvatarUpload = async (e) => {
     console.log(error);
     alert(error?.response?.data || "Upload failed");
   } finally {
-    setAvatar(null);
+    handleAvatarReset()
+    setIsUploading(false)
   }
 }
 
@@ -116,13 +126,17 @@ const handleAvatarUpload = async (e) => {
           type="file"
           accept="image/*"
           className="mb-3"
+          ref={fileInputRef}
           onChange={handleAvatarChange}
         />
         <button
           type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          className={`bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 ${
+            isUploading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={isUploading}
         >
-          Update Avatar
+          {isUploading ? "Uploading..." : "Update Avatar"}
         </button>
       </form>
     </div>
