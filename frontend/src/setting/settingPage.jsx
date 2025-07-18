@@ -1,26 +1,78 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useCookies } from "react-cookie";
 
 export default function SettingsPage() {
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
-  const [email , setEmail] = useState("")
-  const handlePasswordChange = (e) => {
+  const [email, setEmail] = useState("")
+  const [cookies , setCookies] = useCookies()
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
-    
-    console.log("New password:", password);
-  };
-
-  const handleAvatarChange = (e) => {
-    setAvatar(e.target.files[0]);
-  };
-
-  const handleAvatarUpload = (e) => {
-    e.preventDefault();
-    if (avatar) {
-     
-      console.log("Uploading avatar:", avatar.name);
+    if (!email.trim() || !password.trim()) {
+      alert("please fill all field correctly")
     }
+    
+    const confirm = window.confirm("Are you sure want to change passowrd ?")
+    if (!confirm) return;  
+    try {
+      const { data } = await axios.patch(
+        `${import.meta.env.VITE_URL}/user/changePassword`,
+         {email, password},{
+         
+          headers: {
+            Authorization: `Bearer ${cookies.refreshToken?.user?.refreshtoken}`,
+          }
+        }
+      );
+    console.log(data)
+    alert(data)
+    } catch (error) {
+      console.log(error)
+      alert(error?.response?.data);
+    } finally {
+      setEmail("")
+      setPassword("")          
+    }
+
   };
+
+const handleAvatarChange = (e) => {
+  setAvatar(e.target.files[0]);
+};
+
+const handleAvatarUpload = async (e) => {
+  e.preventDefault()
+
+  if (!avatar) {
+    alert("File has not  selected")
+    return;
+  }
+
+  const formData = new FormData()
+  formData.append("avatar", avatar)
+
+  try {
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_URL}/user/uploadAvatar`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${cookies.refreshToken?.user?.refreshtoken}`,
+        },
+      }
+    );
+    console.log(data);
+    alert(data);
+  } catch (error) {
+    console.log(error);
+    alert(error?.response?.data || "Upload failed");
+  } finally {
+    setAvatar(null);
+  }
+}
+
 
   return (
     <div className="max-w-xl mx-auto p-6 mt-10 bg-white shadow rounded-xl">

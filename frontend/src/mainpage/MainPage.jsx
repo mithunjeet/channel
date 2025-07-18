@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { roles } from "../location_data";
 import { location } from "../location_data";
 import { useCookies } from "react-cookie";
@@ -9,19 +9,52 @@ function MainPage() {
   const [searchMode, setSearchMode] = useState("user");
   const [searchname, setSearch] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [district, setDistrict] = useState([]);
-  const [village, setVillage] = useState("");
-  const [logout, setLogout] = useState(true);
-  const [cookies, setcookies] = useCookies()
-  const navigate = useNavigate();
+  const [selectedState, setSelectedState] = useState("")
+  const [selectedDistrict, setSelectedDistrict] = useState("")
+  const [district, setDistrict] = useState([])
+  const [village, setVillage] = useState("")
+  const [cookies, setCookies] = useCookies(["refreshToken"])
+  const [locationJobs, setLocationJobs] = useState([])
+  const navigate = useNavigate()
+  const tracklocation = useLocation() //track the current  routes
+
+  const loadJobToCurrentUserLocationAlReady = async () => {
+    try {
+      const state = cookies.refreshToken?.user?.state;
+      const district = cookies.refreshToken?.user?.district;
+
+      if (!state || !district) {
+        console.warn("Missing location in cookies");
+        return;
+      }
+
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_URL}/apply/getJobOfUserLocation`,
+        {
+          params: { state, district },
+          headers: {
+            Authorization: `Bearer ${cookies.refreshToken?.user?.refreshtoken}`,
+          },
+        }
+      );
+
+      setLocationJobs(data);
+    } catch (error) {
+      console.error("Error fetching jobs ", error);
+    }
+  };
+
+  useEffect(() => {
+    loadJobToCurrentUserLocationAlReady();
+  }, []);
 
   async function handlelogout(e) {
+    const confirm = window.confirm("Are you sure you want to logout?");
+    if (!confirm) return;
     e.preventDefault();
-    setLogout(!logout);
+    setCookies("refreshToken", "", { path: "/" });
+    navigate("/login");
   }
-
 
   async function handlesearch(e) {
     e.preventDefault();
@@ -30,16 +63,15 @@ function MainPage() {
         `${import.meta.env.VITE_URL}/user/search/${searchname}`
       );
       setSearch("");
-      console.log(typeof(data));
-      if (typeof(data) == "string"){
-        return alert("no user find with this name try another name !!")
+      if (typeof data === "string") {
+        return alert("No user found with this name. Try another name.");
       }
       if (
         data?.message === "query for user found successfully" &&
         data?.flag === "user"
       ) {
-        navigate("/mainpage/userprofile", {
-          state: data?.doc
+        navigate("/userprofile", {
+          state: data?.doc,
         });
       }
     } catch (error) {
@@ -49,36 +81,31 @@ function MainPage() {
 
   async function handleJobSearch(e) {
     e.preventDefault();
-    console.log("hii from handleJobSearch ")
-    console.log(selectedDistrict)
-    if ( !selectedState || !selectedDistrict || !village ) {
+    if (!selectedState || !selectedDistrict || !village) {
       alert("Please fill all job search fields");
       return;
     }
 
-try {
- const  {data}  = await axios.get(`${import.meta.env.VITE_URL}/apply/jobApplicant/search`, {
-  params: {
-    state: selectedState,
-    district: selectedDistrict,
-    role: selectedRole || "",
-    village: village
-  },
-  headers: {
-    Authorization: `Bearer ${cookies.refreshToken?.user?.refreshtoken}`
-  }
-});
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_URL}/apply/jobApplicant/search`,
+        {
+          params: {
+            state: selectedState,
+            district: selectedDistrict,
+            role: selectedRole || "",
+            village: village,
+          },
+          headers: {
+            Authorization: `Bearer ${cookies.refreshToken?.user?.refreshtoken}`,
+          },
+        }
+      );
 
-      
-    console.log(data);
-    navigate('/mainpage/jobApplicant', { state: data });  
-    }catch (error){
-     alert("someting went wrong during search")  
-    } finally {
-      
+      navigate("/jobApplicant", { state: data });
+    } catch (error) {
+      alert("Something went wrong during search");
     }
-
-
   }
 
   useEffect(() => {
@@ -151,7 +178,7 @@ try {
                 }}
                 className="border p-2 rounded"
               >
-                <option value="">--select state --</option>
+                <option value="">-- Select State --</option>
                 {location.states.map((obj, idx) => (
                   <option key={idx} value={obj.state}>
                     {obj.state}
@@ -166,13 +193,11 @@ try {
                 className="border p-2 rounded"
               >
                 <option value="">Select District</option>
-                {district.map((dis, idx) => {
-                  return (
-                    <option key={idx} value={dis}>
-                      {dis}
-                    </option>
-                  );
-                })}
+                {district.map((dis, idx) => (
+                  <option key={idx} value={dis}>
+                    {dis}
+                  </option>
+                ))}
               </select>
 
               <input
@@ -194,27 +219,18 @@ try {
         </div>
 
         <div className="flex flex-wrap justify-center md:justify-end items-center gap-4 w-full md:w-auto">
-          <Link
-            to="/mainpage"
-            className="text-lg font-semibold text-gray-700 hover:underline"
-          >
-            home
+          <Link to="/" className="text-lg font-semibold text-gray-700 hover:underline">
+            Home
           </Link>
-
           <div
             className="text-lg font-semibold text-gray-700 hover:underline cursor-pointer"
             onClick={handlelogout}
           >
-            {logout === true ? "logout" : "login"}
+            Logout
           </div>
-
-          <Link
-            to="/mainpage/dashboard"
-            className="text-lg font-semibold text-gray-700 hover:underline"
-          >
-            dashboard
+          <Link to="/dashboard" className="text-lg font-semibold text-gray-700 hover:underline">
+            Dashboard
           </Link>
-
           <img
             src="https://tse1.mm.bing.net/th?id=OIP.3V6e0wFVGP0F8RqB1SR5rQHaNK&pid=Api"
             alt="profile img"
@@ -224,6 +240,30 @@ try {
       </header>
 
       <main className="grow max-w-5xl mx-auto w-full px-4 py-6">
+      
+        {tracklocation.pathname === "/" && (
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">
+              Jobs Available in Your Location
+            </h2>
+            {locationJobs.length === 0 ? (
+              <p className="text-gray-500"> No jobs available to your current location.</p>
+            ) : (
+              <div className="space-y-4">
+                {locationJobs.map((job) => (
+                  <div key={job._id} className="border rounded p-4 shadow bg-white">
+                    <h3 className="font-bold text-lg">{job.jobTitle}</h3>
+                    <p className="text-gray-700">{job.jobDescription}</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {job.district}, {job.state}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <Outlet />
       </main>
 
@@ -238,5 +278,7 @@ try {
 }
 
 export default MainPage;
+
+
 
 

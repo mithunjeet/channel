@@ -60,9 +60,7 @@ export default function Login() {
       </h1>
       </div> :
       <div className="relative min-h-screen flex flex-col md:flex-row">
-     <h1 className="fixed top-0 left-0 w-full text-center bg-yellow-100 text-amber-600 font-semibold text-sm md:text-base py-2 shadow-md animate-pulse z-50">
-     📩 Since i am using  some free services, please check your emai <span className="font-bold">Spam</span> folder for the verification email.
-     </h1>
+   
 
       
       <div className="md:w-1/2 bg-gradient-to-br from-blue-100 to-blue-300 p-8 flex flex-col justify-center items-center space-y-4">
@@ -70,7 +68,7 @@ export default function Login() {
           Connecting Skills to <br /> Local Job Opportunities
         </h1>
         <p className="text-center text-blue-950 text-lg font-medium max-w-md">
-          A platform to empower rural workers like electricians, chefs, carpenters, masons & more.
+          A platform to empower rural workers.
         </p>
         <div className="grid grid-cols-2 gap-4 mt-4 w-full max-w-md">
           <img src="https://tse4.mm.bing.net/th?id=OIP.M74gFUENDe8Hnc2_fwXhewHaFc&pid=Api&P=0&h=180" alt="Electrician" className="h-28 w-full object-cover rounded-xl shadow-md" />

@@ -1,9 +1,50 @@
 import { Link } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
+import axios from "axios"; 
+
 function ProfileCard({ data }) {
+  const [rating, setRating] = useState(0);
+  const [noOfPersonRated, setNoOfPersonRated] = useState(0);
+  const [cookies] = useCookies();
+
+  async function fetchRating() {
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_URL}/rate/getRating`, {
+        _id: data?._id,
+      }, {
+        headers: {
+          Authorization: `Bearer ${cookies.refreshToken?.user?.refreshtoken}`,
+        },
+      });
+
+      if (res.data.length > 0) {
+        setRating(res.data[0].averageRating);
+        setNoOfPersonRated(res.data[0].totalRating);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleRating() {
+    console.log(noOfPersonRated)
+    console.log(rating)
+    let avg = Math.round(rating);
+    if (avg === 1) return "⭐";
+    if (avg === 2) return "⭐⭐";
+    if (avg === 3) return "⭐⭐⭐";
+    if (avg === 4) return "⭐⭐⭐⭐";
+    if (avg === 5) return "⭐⭐⭐⭐⭐";
+    return "No Rating";
+  }
+
+  useEffect(() => {
+    fetchRating();
+  }, [data]); 
+
   return (
-    <div className="w-full max-w-xs bg-white shadow-md rounded-xl border border-gray-200 p-4 flex flex-col justify-between h-[300px] overflow-hidden">
-  
+    <div className="w-full max-w-xs bg-white shadow-md rounded-xl border border-gray-200 p-4 flex flex-col justify-between h-[250px] overflow-hidden">
       <div className="flex items-center gap-4">
         <img
           src={
@@ -18,31 +59,26 @@ function ProfileCard({ data }) {
             {data?.username || "Unknown User"}
           </h2>
           <p className="text-sm text-gray-500 truncate">
-            Role: {data?.role || "N/A"}
+            Role: {data?.service || "N/A"}
           </p>
         </div>
       </div>
 
-    
       <div className="mt-4 text-sm text-gray-600 space-y-1">
-        <p>
-          <span className="font-medium">Contact:</span>{" "}
-          {data?.contact || "+91 -----------"}
-        </p>
+      
         <p>
           <span className="font-medium">Address:</span>{" "}
-          {data?.address || "Not Provided"}
+          {data?.state ? `${data?.state} ${data?.district}` : "not provided"}
         </p>
         <p>
-          <span className="font-medium">Rating:</span> ⭐{" "}
-          {data?.rating || "N/A"}
+          <span className="font-medium">Rating:</span>
+          {rating === 0 ? "not rated Yet" : handleRating()}
         </p>
       </div>
 
-    
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         <Link
-          to={`/mainpage/report/${data._id}`}
+          to={`/report/${data._id}`}
           state={data}
           className="px-3 py-1 text-xs bg-red-500 text-white rounded-full hover:bg-red-600 transition"
         >
@@ -55,14 +91,14 @@ function ProfileCard({ data }) {
           Contact
         </a>
         <Link
-          to={`/mainpage/rate/${data?._id}`}
+          to={`/rate/${data._id}`}
           state={data}
           className="px-3 py-1 text-xs bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
         >
           Rate
         </Link>
         <Link
-          to={`/mainpage/comment/${data._id}`}
+          to={`/comment/${data._id}`}
           state={data}
           className="px-3 py-1 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
         >
@@ -74,12 +110,7 @@ function ProfileCard({ data }) {
 }
 
 
-
-
-
 import { useLocation } from "react-router-dom";
-
-
 export default function JobSeekerProfile() {
   const location = useLocation();
   const [data, setData] = useState([]);
@@ -91,35 +122,11 @@ export default function JobSeekerProfile() {
       setData([]);
     }
   }, [location.state]);
-  if (!data?.length) {
-  return (
-    <div className="flex items-center justify-center min-h-[300px] text-gray-500">
-      <div className="text-center space-y-2">
-        <svg
-          className="w-12 h-12 mx-auto text-blue-400"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 13h6m2 6H7a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h5a2 2 0 012 2v7"
-          />
-        </svg>
-        <p className="text-lg font-semibold">No users found</p>
-        <p className="text-sm text-gray-400">Try adjusting your search or filters.</p>
-      </div>
-    </div>
-  );
-}
-
   return (
     <div className="min-h-screen px-2 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-      {Array.isArray(data) &&
-        data.map((obj) => <ProfileCard key={obj._id} data={obj} />)}
+      {data.map((obj) => (
+        <ProfileCard key={obj._id} data={obj} />
+      ))}
     </div>
   );
 }
-

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams ,Link} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import { showEmojiAlert } from 'alert_popup_emoji';
 import axios from 'axios';
 export default function RateUserForm() {
   const [value, setValue] = useState("");
@@ -31,7 +32,7 @@ export default function RateUserForm() {
       console.log(data);
       alert("thanks for rate me")
     } catch (err) {
-      setError(err?.response?.data);
+      showEmojiAlert({message : err?.response?.data , type : false, sound : false})
       console.log(error)
     } finally {
        setIsLoading(false)    
@@ -44,17 +45,17 @@ export default function RateUserForm() {
     setIsLoading(false); 
     navigate(-1); // it will move one history back
   }
-  if (error) {
-  console.log(error);
-  return (
-    <div className="flex justify-center items-center h-screen w-full">
-     <div>
-      <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
-        <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack} > back</button>   
-     </div>
-    </div>
-  ); 
-}
+//   if (error) {
+//   console.log(error);
+//   return (
+//     <div className="flex justify-center items-center h-screen w-full">
+//      <div>
+//       <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
+//         <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack} > back</button>   
+//      </div>
+//     </div>
+//   ); 
+// }
   return (
     <>
       {isLoading ?

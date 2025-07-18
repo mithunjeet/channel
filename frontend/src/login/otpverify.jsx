@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-
+import { showEmojiAlert } from 'alert_popup_emoji';
 import { Link , useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
  
@@ -42,26 +42,26 @@ const OtpVerify = () => {
        
         });
       
-        navigate('/mainpage');
+        navigate('/');
       }
     } catch (err) {
-      setError(err?.response?.data)
+       showEmojiAlert({message : err?.response?.data  , type : false , sound : true})
       console.log(err);
     }
     finally { 
            setIsLoading(false)
     }
   }
-  if(error){
-  return (
-    <div className="flex justify-center items-center h-screen w-screen">
-     <div>
-      <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
-        <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack}> back</button>   
-     </div>
-    </div>
-  ); 
-}
+//   if(error){
+//   return (
+//     <div className="flex justify-center items-center h-screen w-screen">
+//      <div>
+//       <h1 className="font-semibold text-5xl text-red-600">{ error || "Something went wrong"}</h1>
+//         <button className="text-black text-xl hover:underline  font-extrabold " onClick={handleGoBack}> back</button>   
+//      </div>
+//     </div>
+//   ); 
+// }
 
 
   return (
@@ -75,6 +75,9 @@ const OtpVerify = () => {
       </div>
       
       : <div className="flex items-center justify-center min-h-screen bg-gray-100 font-sans">
+      <h1 className="fixed top-0 left-0 w-full text-center bg-yellow-100 text-amber-600 font-semibold text-sm md:text-base py-2 shadow-md animate-pulse z-50">
+     📩 Since i am using  some free services, please check your emai <span className="font-bold">Spam</span> folder for the verification email.
+     </h1>      
       <div className="text-center">
         <h2 className="text-2xl font-semibold mb-6">Enter OTP</h2>
 
@@ -105,7 +108,7 @@ const OtpVerify = () => {
         >
           Verify
         </button>
-        <Link  to={"/"}  className='text-xl  text-red-400'> resend otp</Link>
+        <Link  to={"/resendOtp"}  className='text-xl  text-red-400'> resend otp</Link>
       </div>
     </div>
       }
