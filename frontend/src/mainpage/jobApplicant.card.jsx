@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function JobApplicationCard() {
   return (
@@ -26,7 +26,7 @@ export default function JobApplicationCard() {
         </div>
       </div>
 
-      {/* Job Info */}
+  
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
         <div><strong>Village:</strong> {applicant.village}</div>
         <div><strong>District:</strong> {applicant.district}</div>

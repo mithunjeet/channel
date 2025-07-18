@@ -4,7 +4,7 @@ import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { roles } from "../location_data";
 import { location } from "../location_data";
 import { useCookies } from "react-cookie";
-
+import JobCard from "./jobCard";
 function MainPage() {
   const [searchMode, setSearchMode] = useState("user");
   const [searchname, setSearch] = useState("");
@@ -39,6 +39,7 @@ function MainPage() {
       );
 
       setLocationJobs(data);
+      console.log(data)
     } catch (error) {
       console.error("Error fetching jobs ", error);
     }
@@ -244,7 +245,7 @@ function MainPage() {
         {tracklocation.pathname === "/" && (
           <div className="mb-6">
          
-            {locationJobs.length === 0 ? (
+ {locationJobs.length === 0 ? (
 <div className="flex items-center justify-center w-full h-screen bg-gray-50 px-4">
   <p className="text-gray-700 text-lg md:text-xl font-medium text-center max-w-md">
     📌  No jobs available for your current location.
@@ -253,17 +254,20 @@ function MainPage() {
 
 
             ) : (
-              <div className="space-y-4">
-                {locationJobs.map((job) => (
-                  <div key={job._id} className="border rounded p-4 shadow bg-white">
-                    <h3 className="font-bold text-lg">{job.jobTitle}</h3>
-                    <p className="text-gray-700">{job.jobDescription}</p>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {job.district}, {job.state}
-                    </p>
-                  </div>
-                ))}
-              </div>
+
+ <div className="w-full px-4 sm:px-6 lg:px-8">
+  <h1 className="text-base text-center underline underline-offset-1   sm:text-lg font-semibold mb-4 text-gray-700">
+    Jobs In Your Locality
+    </h1>
+              
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 text-sm">
+    {locationJobs.map((info , index) => (
+      <JobCard key={index} doc={info} />
+    ))}
+                    
+  </div>
+</div>
+
             )}
           </div>
         )}

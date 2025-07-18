@@ -31,7 +31,7 @@ function JobApplicationPage() {
               className="bg-white rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300"
             >
               <div className="p-6 space-y-4">
-                {/* Profile Header */}
+                
                 <div className="flex items-center gap-4">
                   <img
                     src={"https://tse1.mm.bing.net/th?id=OIP.pHKwbwSwKlX0zCMXPnir5wHaLH&pid=Api&P=0&h=180"}
@@ -54,7 +54,7 @@ function JobApplicationPage() {
                   </div>
                 </div>
 
-                {/* Details Section */}
+            
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-700">
                   <div><strong>Village:</strong> {obj?.village}</div>
                   <div><strong>District:</strong> {obj?.district}</div>
@@ -64,7 +64,7 @@ function JobApplicationPage() {
                   <div><strong>Expected Wages:</strong> ₹{obj?.expectedWages}</div>
                 </div>
 
-                {/* Footer Section */}
+          
                 <div className="text-sm text-gray-800 pt-2">
                   <strong>Job Commitment:</strong> {obj?.jobcommitment}
                 </div>
@@ -77,4 +77,4 @@ function JobApplicationPage() {
   );
 }
 
-export default JobApplicationPage;
+export default JobApplicationPage
