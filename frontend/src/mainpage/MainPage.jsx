@@ -243,11 +243,15 @@ function MainPage() {
       
         {tracklocation.pathname === "/" && (
           <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">
-              Jobs Available in Your Location
-            </h2>
+         
             {locationJobs.length === 0 ? (
-              <p className="text-gray-500"> No jobs available to your current location.</p>
+<div className="flex items-center justify-center w-full h-screen bg-gray-50 px-4">
+  <p className="text-gray-700 text-lg md:text-xl font-medium text-center max-w-md">
+    📌  No jobs available for your current location.
+  </p>
+</div>
+
+
             ) : (
               <div className="space-y-4">
                 {locationJobs.map((job) => (
