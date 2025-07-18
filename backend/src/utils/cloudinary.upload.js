@@ -20,6 +20,6 @@ export const cloudinaryUpload = async (localpath) => {
     } catch (error) {
           fs.unlinkSync(localpath)
           console.log(error)
-          throw  error(error)
+          throw  error
     }
 }
