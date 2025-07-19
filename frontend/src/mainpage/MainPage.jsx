@@ -237,7 +237,7 @@ function MainPage() {
    <img
   src={cookies?.refreshToken?.user?.avatar}
   alt="User Avatar"
-  className="w-28 h-28 rounded-full object-cover border border-gray-300 shadow-sm"
+  className="w-24 h-24 rounded-full object-cover border border-gray-300 shadow-sm"
 />
 
   ) : (
