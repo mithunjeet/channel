@@ -234,11 +234,12 @@ function MainPage() {
           </Link>
             <div>
   {cookies?.refreshToken?.user?.avatar ? (
-    <img
-      src={cookies.refreshToken.user.avatar}
-      alt="avatar"
-      className="w-28 h-28cd rounded-full object-cover"
-    />
+   <img
+  src={cookies?.refreshToken?.user?.avatar}
+  alt="User Avatar"
+  className="w-28 h-28 rounded-full object-cover border border-gray-300 shadow-sm"
+/>
+
   ) : (
     <div className="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center text-lg font-semibold">
       {cookies?.refreshToken?.user?.username?.charAt(0).toUpperCase()}
