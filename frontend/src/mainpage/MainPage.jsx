@@ -232,11 +232,20 @@ function MainPage() {
           <Link to="/dashboard" className="text-lg font-semibold text-gray-700 hover:underline">
             Dashboard
           </Link>
-          <img
-            src="https://tse1.mm.bing.net/th?id=OIP.3V6e0wFVGP0F8RqB1SR5rQHaNK&pid=Api"
-            alt="profile img"
-            className="h-15 w-16 object-cover rounded-full"
-          />
+            <div>
+  {cookies?.refreshToken?.user?.avatar ? (
+    <img
+      src={cookies.refreshToken.user.avatar}
+      alt="avatar"
+      className="w-10 h-10 rounded-full object-cover"
+    />
+  ) : (
+    <div className="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center text-lg font-semibold">
+      {cookies?.refreshToken?.user?.username?.charAt(0).toUpperCase()}
+    </div>
+  )}
+</div>
+
         </div>
       </header>
 
