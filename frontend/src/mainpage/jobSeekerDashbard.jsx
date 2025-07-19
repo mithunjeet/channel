@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; 
 import { useCookies } from "react-cookie";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 export default function JobSeekerDashboard() {
   const [cookies, setCookies] = useCookies();
   const [rating, setRating] = useState(0)
-  const [noOfPersonRated , setNoOfPersonRated ] = useState(0)
+  const [noOfPersonRated, setNoOfPersonRated] = useState(0)
+  const navigate = useNavigate()
     async function fetchRating() { 
       try {
       const { data } = await axios.post(`${import.meta.env.VITE_URL}/rate/getRating`, {
@@ -48,11 +50,22 @@ function handleRating() {
         <h1 className="text-3xl font-bold text-blue-700 text-center">Your Dashboard</h1>
 
         <div className="flex flex-col md:flex-row gap-6 items-center border-b pb-4">
-          <img
-            src="https://tse1.mm.bing.net/th?id=OIP.QCNBVOKyMqHKD6hp3fYGZgHaHa&pid=Api&P=0&h=180"
+       
+
+<div>
+  {cookies?.refreshToken?.user?.avatar ? (
+     <img
+            src={cookies?.refreshToken?.user?.avatar}
             alt="Profile"
             className="w-28 h-28 rounded-full object-cover border-4 border-blue-300"
-          />
+    />
+  ) : (
+    <div onClick={(e)=> {navigate("/setting")}} title="upload avatar" className="w-28 h-28 rounded-full bg-gray-500 text-white flex items-center justify-center text-5xl font-semibold">
+      {cookies?.refreshToken?.user?.username?.charAt(0).toUpperCase()}
+    </div>
+  )}
+</div>
+
           <div className="flex-1 space-y-1">
             <h2 className="text-xl font-semibold">{cookies.refreshToken?.user?.username }</h2>
             <p className="text-gray-600">📞 .........</p>

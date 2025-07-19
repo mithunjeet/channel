@@ -237,7 +237,7 @@ function MainPage() {
     <img
       src={cookies.refreshToken.user.avatar}
       alt="avatar"
-      className="w-10 h-10 rounded-full object-cover"
+      className="w-28 h-28cd rounded-full object-cover"
     />
   ) : (
     <div className="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center text-lg font-semibold">
