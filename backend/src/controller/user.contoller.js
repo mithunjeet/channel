@@ -192,9 +192,7 @@ const login = async (req, res) => {
   
   const user = await User.findOne({email});
   if (!user) 
-    return res.status(404).json({ message: "user not found  please enter a valid email " });
-  
-
+    return res.status(404).json({ message: "user not found  please enter a valid email " })
   // yaha par passord ko bcrypt kar ka chaeck karna hai 
   // abhi ka leya thik hai baad mai dekhata hai 
   
@@ -215,17 +213,10 @@ const login = async (req, res) => {
    
  
   try {
-    await  transporter.sendMail({
-      from: `"${process.env.APP_NAME}" <${process.env.EMAIL_USER}>`,
-
-      to: email,
-      subject: "Verify Your Account",
-      text: `Your OTP is ${otp}. It expires in 10 minutes.`,
-    });
-
+  await otpVerificationEmail(email, otp)
   }catch (emailError) {
-    console.error("Email sending failed:", emailError);
-    return res.status(500).json({ error: "Failed to send OTP. Try again later." });
+    console.error("Email sending failed:", emailError)
+    return res.status(500).json({ error: "Failed to send OTP. Try again later." })
   }
 
 
@@ -233,24 +224,65 @@ const login = async (req, res) => {
 
 }
 
-const forgotpassword = async (req , res, next) => {
-   
+const forgotpassword = async (req, res, next) => {
+  const { email } = req.body
+
+  if (!email?.trim()) return res.status(404).json({error : "please enter valid email"})
+ 
+
   try {
-      const { email } = req.body
-      if (email?.trim) return res.status(404).json("please enter valid email")
-      const user = await User.findOne({ email })
-      if(!user)  return res.status(400).json("user not exit  first create  account and then try again")
-      
-    const otp = generateotp();
+    const user = await User.findOne({ email })
+    if (!user)
+    return res.status(400).json("user not exit  first create  account and then try again")
+
+    const otp = generateotp()
     user.otp = otp
-    
-    otpVerificationEmail(email, otp);
-      next()
-    } catch (error) {
-          next(error)
-    }        
+    await user.save({ validateBeforeSave: false })
+    await otpVerificationEmail(email, otp)
+    return res.status(200).json({ message : "opt is send to your email account complete next step", email: email });
+  } catch (error) {
+    return res.status(500).json({ error : "error during forgot password reset by from nodemailer.. " })
+  }
 }
-  
+
+
+const forgotPasswordOtpVerify = async (req, res) => {
+  const { otp, password, email } = req.body
+
+  if (!otp) return res.status(404).json("please enter otp properly")
+  if (!email?.trim()) return res.status(404).json("email not from your frontend side its developer fault")
+  if (!password?.trim()) return res.status(404).json("password not found")
+
+  const doc = await User.findOne({ email })
+  if (!doc) return res.status(404).json("user not exist")
+
+  const duration = (Date.now() - doc.otpExpires) / 1000;
+
+  if (duration > 600) { //  10 minutes
+    doc.otpExpires = undefined
+    doc.otp = undefined
+    await doc.save({ validateBeforeSave: false })
+    return res.status(404).json("otp expired, try again...")
+  }
+
+  const token = await generateAccesTokenAndRefreshToken(doc._id)
+
+  doc.refreshtoken = token?.refreshToken
+  doc.otpExpires = undefined
+  doc.isverified = true
+  doc.otp = undefined
+  doc.password = await bcrypt.hash(password, 10)
+
+  await doc.save({ validateBeforeSave: false })
+
+ 
+  const updateddoc = await User.findOne({ email }).select('password email')
+
+  if (!updateddoc) return res.status(500).json("something went wrong during process...")
+
+  return res.status(200).json({ message: "login successfully", data: updateddoc })
+};
+ 
  
 async function searchuser(req, res) {
   const { user } = req.params;
@@ -338,4 +370,4 @@ const uploadAvatar = async (req, res) => {
 }
 
 
-export {registerUser, verifyOtp , resendotp, login , searchuser, changePassword , uploadAvatar}
+export {registerUser, verifyOtp , resendotp, login , searchuser, changePassword , uploadAvatar , forgotpassword, forgotPasswordOtpVerify}

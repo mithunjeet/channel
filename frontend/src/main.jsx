@@ -85,7 +85,8 @@ import Comment from './componet_general/Comment.jsx';
 import JobSeekerDashboard from './mainpage/jobSeekerDashbard.jsx';
 import JobApplicationForm from './mainpage/jobApplication.jsx';
 import JobApplicationPgae from './mainpage/jobApplicationPage.jsx';
-import ProtectedRoute from   "./mainpage/middleware.jsx"
+import ProtectedRoute from "./mainpage/middleware.jsx"
+import ForgotPasswordOtpVerify from './login/forgotPasswordOtpVerify.jsx';
 import  LoadJobAlreadyToUserLocation  from './mainpage/loadAlreadyToUserLocation.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -96,7 +97,7 @@ const router = createBrowserRouter(
       <Route path='/register' element={<CreateAccount />} />
       <Route path='/verifyOtp' element={<OTPVerify />} />
       <Route path='/resendOtp' element={<ResendOtp />} />
-
+      <Route path='/otpVerify' element={ <ForgotPasswordOtpVerify/>} />
       <Route
         path='/'
         element={
