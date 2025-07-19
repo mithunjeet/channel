@@ -16,5 +16,5 @@ userRouter.route("/uploadAvatar").post(
   jwtVerify,
   uploadAvatar
 );
-userRouter.route("/otpverify").post(forgotPasswordOtpVerify)
+userRouter.route("/otpverifyAfterForgetPassword").post(forgotPasswordOtpVerify)
 

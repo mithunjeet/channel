@@ -11,9 +11,9 @@ const OtpVerify = () => {
 
   const [cookies, setcookie] = useCookies()
 
-  const doc = useLocation()
-  const navigate = useNavigate()
-
+ //   const doc = useLocation()
+//   const navigate = useNavigate()
+  
   const handleChangeOtp = (value, index) => {
     const newOtp = [...otp]
     newOtp[index] = value
@@ -25,7 +25,8 @@ const OtpVerify = () => {
     setSendRequest(true)
 
     try {
-      if (!doc?.state?.trim()) {
+      const email = localStorage.getItem("resetEmail")    
+      if (!email.trim()) {
         alert("Email not found. It is  a frontend issue from forgot password page...");
         return;
       }
@@ -55,19 +56,20 @@ const OtpVerify = () => {
 
       const { data } = await axios.post(
         `${import.meta.env.VITE_URL}/user/otpverify`,
-        { email: doc.state, otpinnumberformat, password }
+        { email , otpinnumberformat, password }
       );
-
+       console.log(data)
       if (data?.message === "login successfully") {
         setcookie("refreshToken", data?.data, {
           path: "/",
           maxAge: 7 * 24 * 60 * 60,
-        });
+        })
         navigate("/")
       }
     } catch (error) {
       alert(error?.response?.data?.message || "Something went wrong")
     } finally {
+      localStorage.removeItem("resetEmail")  
       setSendRequest(false)
       setOtp(new Array(6).fill("")) 
       setconfirmPassword("")

@@ -97,7 +97,7 @@ const router = createBrowserRouter(
       <Route path='/register' element={<CreateAccount />} />
       <Route path='/verifyOtp' element={<OTPVerify />} />
       <Route path='/resendOtp' element={<ResendOtp />} />
-      <Route path='/otpVerify' element={ <ForgotPasswordOtpVerify/>} />
+      <Route path='/otpverifyAfterForgetPassword' element={ <ForgotPasswordOtpVerify/>} />
       <Route
         path='/'
         element={

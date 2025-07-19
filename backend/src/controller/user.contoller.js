@@ -248,7 +248,7 @@ const forgotpassword = async (req, res, next) => {
 
 const forgotPasswordOtpVerify = async (req, res) => {
   const { otp, password, email } = req.body
-
+  console.log(req.body)
   if (!otp) return res.status(404).json("please enter otp properly")
   if (!email?.trim()) return res.status(404).json("email not from your frontend side its developer fault")
   if (!password?.trim()) return res.status(404).json("password not found")
@@ -277,11 +277,12 @@ const forgotPasswordOtpVerify = async (req, res) => {
 
  
   const updateddoc = await User.findOne({ email }).select('password email')
-
+  console.log("hii from restepassword")
+  console.log(updateddoc)
   if (!updateddoc) return res.status(500).json("something went wrong during process...")
 
   return res.status(200).json({ message: "login successfully", data: updateddoc })
-};
+}
  
  
 async function searchuser(req, res) {
