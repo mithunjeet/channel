@@ -97,12 +97,19 @@ export default function Comment() {
             return (
               <div key={comment._id} className="border p-3 rounded shadow-sm flex items-start gap-3">
               
-                <img
-                  src={'https://tse2.mm.bing.net/th?id=OIP.FH7twz8S3LHW-VYFO5juHwHaJO&pid=Api&P=0&h=180'|| "/default-profile.png"}
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                
+            <div>
+{ user && user?.avatar ? (
+    <img
+      src={user?.avatar}
+      alt="avatar"
+      className="w-12 h-12 rounded-full object-cover"
+    />
+  ) : (
+    <div className="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center text-lg font-semibold">
+      {user?.username?.charAt(0).toUpperCase()}
+    </div>
+  )}
+</div>
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
                     <p className="font-semibold text-sm">{user?.username || "Unknown"}</p>

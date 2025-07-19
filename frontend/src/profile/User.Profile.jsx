@@ -46,14 +46,19 @@ function ProfileCard({ data }) {
   return (
     <div className="w-full max-w-xs bg-white shadow-md rounded-xl border border-gray-200 p-4 flex flex-col justify-between h-[250px] overflow-hidden">
       <div className="flex items-center gap-4">
-        <img
-          src={
-            data?.avatar ||
-            "https://tse4.mm.bing.net/th?id=OIP.vmsGg4h02m-MfxWyw0PMBwHaEK&pid=Api&P=0&h=180"
-          }
-          alt="Avatar"
-          className="w-14 h-14 rounded-full border-2 border-blue-300 object-cover"
-        />
+       <div>
+{ data && data?.avatar ? (
+    <img
+      src={data?.avatar}
+      alt="avatar"
+      className="w-14 h-14 rounded-full object-cover"
+    />
+  ) : (
+    <div className="w-14 h-14 rounded-full bg-gray-500 text-white flex items-center justify-center text-2xl font-semibold">
+      {data?.username?.charAt(0).toUpperCase()}
+    </div>
+  )}
+</div>
         <div className="flex-1">
           <h2 className="text-lg font-semibold text-gray-800 truncate">
             {data?.username || "Unknown User"}

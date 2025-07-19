@@ -8,11 +8,20 @@ function JobCard({ doc }) {
     
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <img
-              src={user?.avatar || "https://tse1.mm.bing.net/th?id=OIP.pHKwbwSwKlX0zCMXPnir5wHaLH&pid=Api&P=0&h=180"}
-              alt="Profile"
-              className="w-12 h-12 rounded-full object-cover border"
-            />
+<div>
+{ user && user?.avatar ? (
+    <img
+      src={user?.avatar}
+      alt="avatar"
+      className="w-12 h-12 rounded-full object-cover"
+    />
+  ) : (
+    <div className="w-12 h-12 rounded-full bg-gray-500 text-white flex items-center justify-center text-lg font-semibold">
+      {user?.username?.charAt(0).toUpperCase()}
+    </div>
+  )}
+</div>
+
             <div>
               <h2 className="font-semibold text-gray-800 text-sm truncate max-w-[120px]">{user?.username}</h2>
              

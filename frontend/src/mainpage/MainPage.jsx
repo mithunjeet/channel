@@ -233,11 +233,11 @@ function MainPage() {
             Dashboard
           </Link>
             <div>
-  {cookies?.refreshToken?.user?.avatar ? (
+{cookies?.refreshToken?.user?.avatar ? (
    <img
   src={cookies?.refreshToken?.user?.avatar}
   alt="User Avatar"
-  className="w-24 h-24 rounded-full object-cover border border-gray-300 shadow-sm"
+  className="w-14 h-14 rounded-full object-cover border border-gray-300 shadow-sm"
 />
 
   ) : (

@@ -57,10 +57,10 @@ function handleRating() {
      <img
             src={cookies?.refreshToken?.user?.avatar}
             alt="Profile"
-            className="w-28 h-28 rounded-full object-cover border-4 border-blue-300"
+            className="w-18 h-18 rounded-full object-cover border-4 border-blue-300"
     />
   ) : (
-    <div onClick={(e)=> {navigate("/setting")}} title="upload avatar" className="w-28 h-28 rounded-full bg-gray-500 text-white flex items-center justify-center text-5xl font-semibold">
+    <div onClick={(e)=> {navigate("/setting")}} title="upload avatar" className="w-18 h-18 rounded-full bg-gray-500 text-white flex items-center justify-center text-3xl font-semibold">
       {cookies?.refreshToken?.user?.username?.charAt(0).toUpperCase()}
     </div>
   )}

@@ -33,11 +33,20 @@ function JobApplicationPage() {
               <div className="p-6 space-y-4">
                 
                 <div className="flex items-center gap-4">
-                  <img
-                    src={"https://tse1.mm.bing.net/th?id=OIP.pHKwbwSwKlX0zCMXPnir5wHaLH&pid=Api&P=0&h=180"}
-                    alt="Profile"
-                    className="w-16 h-16 rounded-full object-cover border"
-                  />
+                
+               <div>
+{ obj && obj?.AlldataofAPplicant[0]?.avatar ? (
+    <img
+      src={obj?.AlldataofAPplicant[0]?.avatar}
+      alt="avatar"
+      className="w-16 h-16 rounded-full object-cover"
+    />
+  ) : (
+    <div className="w-16 h-16 rounded-full bg-gray-500 text-white flex items-center justify-center text-2xl font-semibold">
+      {obj?.AlldataofAPplicant[0]?.username?.charAt(0).toUpperCase()}
+    </div>
+  )}
+</div>
                   <div className="flex-1">
                     <h2 className="text-lg font-semibold text-gray-800">
                       {obj?.AlldataofAPplicant[0]?.username}
