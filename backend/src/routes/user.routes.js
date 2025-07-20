@@ -1,6 +1,12 @@
 import { Router } from "express";
 // import jwtVerify from "../middleware/jwtVerify.middleware.js";
-import { registerUser,  verifyOtp, resendotp, login , searchuser, changePassword , uploadAvatar, forgotpassword, forgotPasswordOtpVerify } from "../controller/user.contoller.js";
+import {
+  registerUser, verifyOtp,
+  resendotp, login, searchuser,
+  changePassword, uploadAvatar,
+  forgotpassword, forgotPasswordOtpVerify, stopcall
+} from "../controller/user.contoller.js"
+
 import { upload } from "../middleware/multer.js";
 import jwtVerify from "../middleware/jwtVerify.middleware.js";
 export  const userRouter = Router();
@@ -17,4 +23,5 @@ userRouter.route("/uploadAvatar").post(
   uploadAvatar
 );
 userRouter.route("/otpverifyAfterForgetPassword").post(forgotPasswordOtpVerify)
+userRouter.route("/stopcall").get(jwtVerify , stopcall)
 

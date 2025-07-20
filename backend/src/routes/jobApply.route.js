@@ -5,7 +5,7 @@ import { allJobApplicationOfParticularUser, allJobApplicationToYourCurrentArea, 
 export const applyJob = Router();
 applyJob.route("/job").post(jwtVerify, jobApply);
 applyJob.route("/jobApplicant/search").get(jwtVerify, getAllJobApplicant)
-applyJob.route("/userapplication").get(allJobApplicationOfParticularUser)
+applyJob.route("/userapplication").get(jwtVerify ,allJobApplicationOfParticularUser)
 applyJob.route("/deleteapplication").delete(jwtVerify, deleteJobApplicant)
 applyJob.route('/stopcall').patch(jwtVerify, jobMelGayaHaiToCallBandKarDO)
 applyJob.route("/getJobOfUserLocation").get(jwtVerify, allJobApplicationToYourCurrentArea)

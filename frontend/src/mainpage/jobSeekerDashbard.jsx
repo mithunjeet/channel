@@ -87,6 +87,7 @@ function handleRating() {
         <div className="flex justify-between text-blue-600 font-medium">
           <Link to="/setting">⚙️ Setting</Link>
           <Link to="/applyjob">Apply Job</Link>
+          <Link to="/manageJob"> manageJob </Link>
           <Link to="/playlist">Playlist</Link>
         </div>
       </div>

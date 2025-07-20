@@ -88,6 +88,7 @@ import JobApplicationPgae from './mainpage/jobApplicationPage.jsx';
 import ProtectedRoute from "./mainpage/middleware.jsx"
 import ForgotPasswordOtpVerify from './login/forgotPasswordOtpVerify.jsx';
 import  LoadJobAlreadyToUserLocation  from './mainpage/loadAlreadyToUserLocation.jsx';
+import AllJobOfUserApplied from './mainpage/AllJobOfUserApplied.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -106,6 +107,7 @@ const router = createBrowserRouter(
           </ProtectedRoute>
         }
       >
+        <Route path='/manageJob' element={<AllJobOfUserApplied/> } />
         <Route path='/loadJob' element={<LoadJobAlreadyToUserLocation />} />
         <Route path='jobApplicant' element={<JobApplicationPgae />} />
         <Route path='userprofile' element={<JobSeekerProfile />} />

@@ -129,29 +129,34 @@ export const getAllJobApplicant = async (req, res) => {
 // If you're using MongoDB Atlas, it supports full-text search with fuzzy matching using Lucene under the hood.
 
 export const allJobApplicationOfParticularUser = async (req, res) => {
-  const { _id } = req.params
+   console.log(req?.user?._id)
+  if (!req?.user?._id) {
+    return res.status(401).json({ message: "Unauthorized User ID missing" });
+  }
+
   try {
-    const userAllApplication = await jobApply.aggregate([
+    const userAllApplication = await JobApply.aggregate([
       {
-        $match : {
-          owner: new mongoose.Types.ObjectId(_id), 
-        },
+        $match: {
+          owner: new mongoose.Types.ObjectId(req.user._id),
+        }
       },
       {
         $lookup: {
           from: "users",
           localField: "owner",
           foreignField: "_id",
-          as: "alldetails", 
-        },
+          as: "alldetails",
+        }
       },
     ]);
 
     return res.status(200).json(userAllApplication);
-  } catch(error) {
-    return res.status(500).json({ message : " error getting job applications ", error });
+  } catch (error) {
+    console.error("Error in allJobApplicationOfParticularUser:", error);
+    return res.status(500).json({ message: "Error getting job applications", error });
   }
-}
+};
 
 
 

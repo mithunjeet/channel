@@ -8,7 +8,8 @@ export default function SettingsPage() {
   const [email, setEmail] = useState("")
   const [cookies, setCookies] = useCookies()
   const [isUploading , setIsUploading] = useState(false)
-   const fileInputRef = useRef(null)
+  const fileInputRef = useRef(null)
+  const [callStop , setCallStop]= useState(false)
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
@@ -87,6 +88,17 @@ const handleAvatarUpload = async (e) => {
   return (
     <div className="max-w-xl mx-auto p-6 mt-10 bg-white shadow rounded-xl">
       <h1 className="text-2xl font-bold mb-6 text-center">Account Settings</h1>
+      <div className="mb-6">
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={callStop}
+            onChange={() => setCallStop(!callStop)}
+            className={callStop? "accent-red-600  h-6 w-6" : "" }
+          />
+          <span className="text-sm text-gray-700 font-semibold">{ callStop ? "make call allowed on you phone" : "stop call on you phone" }</span>
+        </label>
+      </div>
 
      
         <form onSubmit={handlePasswordChange} className="mb-10">

@@ -13,9 +13,6 @@ const userSchema = new mongoose.Schema({
         
 
         },
-        
-      
-        
         email:{
             type:String,
             required:true,
@@ -65,9 +62,18 @@ const userSchema = new mongoose.Schema({
        otp: {
            type: Number,
       },
-      otpExpires: { type: Date }
-        
-
+    otpExpires: { type: Date },
+    stopCall: {
+        type: Boolean,
+        default: false   
+    },
+    mobile : {
+        type : Number
+    },
+    gender : {
+       type: String,
+    }
+    
 
 }, { timestamps : true})
 

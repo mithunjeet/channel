@@ -370,5 +370,23 @@ const uploadAvatar = async (req, res) => {
   return res.status(200).json("avatar has been uploaded successfully");
 }
 
+const stopcall = async (req, res) => {
+  if (!req?.user?._id) {
+    return res.status(404).json("id not found to stop call")
+  }
 
-export {registerUser, verifyOtp , resendotp, login , searchuser, changePassword , uploadAvatar , forgotpassword, forgotPasswordOtpVerify}
+  const doc = await User.findOne({ _id: req.user._id })
+  if (!doc) return res.status(404).json("unauthorized request to stop call")
+
+  doc.stopcall = !doc.stopcall
+  await doc.save({ validateBeforeSave: false })
+
+  if (doc.stopcall) {
+    return res.status(200).json("Call has been stopped successfully on your phone")
+  } else {
+    return res.status(200).json("Call has been started on your phone")
+  }
+}
+
+
+export {registerUser, verifyOtp , resendotp, login , searchuser, changePassword , uploadAvatar , forgotpassword, forgotPasswordOtpVerify , stopcall }

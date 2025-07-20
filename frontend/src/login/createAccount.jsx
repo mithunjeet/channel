@@ -14,7 +14,8 @@ export default function CreateAccount() {
   const [district, setDistrict] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const [state, setState] = useState("")
-  
+  const [gender, setgender] = useState("")
+  const [phone , setphone] = useState("")
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     setFormData({ ...formData, [name]: files[0] });
@@ -102,7 +103,16 @@ export default function CreateAccount() {
             onChange={(e)=> setPassword(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg"
             required
-            />
+          />
+                 
+           <input
+            type="tel"
+            placeholder="phone no"
+            value={phone}
+            onChange={(e)=> setphone(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            required
+            />       
                  <select required={true} name="" id="" value={service} onChange={(e)=>{setService(e.target.value)}} className="w-full p-2 border border-gray-300 rounded-lg">
                    <option value="">--select your choice--</option>
                    <option value="worker">worker</option>
@@ -122,7 +132,15 @@ export default function CreateAccount() {
 
                    {d.map((ele, index) => { return <option value={ele}  key={index}>{ele}</option>})}
                   
-             </select>             
+              </select>
+              <select required={true} name="" id="" value={gender} onChange={(e)=>{setgender(e.target.value)}} className="w-full p-2 border border-gray-300 rounded-lg">
+                   <option value="">--select your gender--</option>
+                   <option value="male">male</option>
+                   <option value="female">female</option>
+                   <option value="other">other</option>
+             </select>   
+                
+                
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
