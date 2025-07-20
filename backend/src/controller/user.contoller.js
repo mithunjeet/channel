@@ -281,7 +281,7 @@ const forgotPasswordOtpVerify = async (req, res) => {
   console.log(updateddoc)
   if (!updateddoc) return res.status(500).json("something went wrong during process...")
 
-  return res.status(200).json({ message: "login successfully", data: updateddoc })
+  return res.status(200).json({ message: "login successfully", user : updateddoc })
 }
  
  
