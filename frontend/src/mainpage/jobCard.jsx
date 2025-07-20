@@ -53,6 +53,6 @@ function JobCard({ doc }) {
   );
 }
 
-export default JobCard
+export default JobCard;
 
 
