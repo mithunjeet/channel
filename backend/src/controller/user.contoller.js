@@ -275,8 +275,8 @@ const forgotPasswordOtpVerify = async (req, res) => {
 
   await doc.save({ validateBeforeSave: false })
 
- 
-  const updateddoc = await User.findOne({ email }).select('password email')
+ const updateddoc = await User.findOne({ email }).select('-password')
+
   console.log("hii from restepassword")
   console.log(updateddoc)
   if (!updateddoc) return res.status(500).json("something went wrong during process...")
