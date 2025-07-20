@@ -156,20 +156,43 @@ export const allJobApplicationOfParticularUser = async (req, res) => {
     console.error("Error in allJobApplicationOfParticularUser:", error);
     return res.status(500).json({ message: "Error getting job applications", error });
   }
-};
+}
 
 
 
 export const deleteJobApplicant = async (req, res) => {
-  const { _id } = req.params;
+  const { _id, owner } = req.query
+
+  if (!req?.user?._id || !owner || !_id) {
+    return res.status(400).json("missing required fields");
+  }
+
+
+  if (!mongoose.Types.ObjectId.isValid(req.user._id) || !mongoose.Types.ObjectId.isValid(owner)) {
+    return res.status(400).json("invalid objectid format");
+  }
+
+
+  if (!new mongoose.Types.ObjectId(req.user._id).equals(new mongoose.Types.ObjectId(owner))) {
+    return res.status(403).json("unauthorized request You cannot delete this job");
+  }
+
   try {
-    const deletedoc = await JobApply.findByIdAndDelete(_id);
-    if (!deletedoc) return res.status(404).json("document not deleted");
-    return res.status(200).json("deleted successfully");
+    const deletedoc = await JobApply.findByIdAndDelete(_id)
+
+    if (!deletedoc) {
+      return res.status(404).json("Job application not found or already deleted")
+    }
+
+    return res.status(200).json("deleted successfully")
   } catch (error) {
-    return res.status(500).json({ message: "error during job deletion", error });
+    return res.status(500).json({
+      message: "error during job deletion",
+      error: error?.message || error,
+    })
   }
 }
+
 
 
 export const jobMelGayaHaiToCallBandKarDO = async (req, res) => {

@@ -89,6 +89,7 @@ import ProtectedRoute from "./mainpage/middleware.jsx"
 import ForgotPasswordOtpVerify from './login/forgotPasswordOtpVerify.jsx';
 import  LoadJobAlreadyToUserLocation  from './mainpage/loadAlreadyToUserLocation.jsx';
 import AllJobOfUserApplied from './mainpage/AllJobOfUserApplied.jsx';
+import Chat from './mainpage/chat.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -106,7 +107,8 @@ const router = createBrowserRouter(
             <MainPage />
           </ProtectedRoute>
         }
-      >
+      > 
+        <Route path='/chat' element={<Chat/> } />
         <Route path='/manageJob' element={<AllJobOfUserApplied/> } />
         <Route path='/loadJob' element={<LoadJobAlreadyToUserLocation />} />
         <Route path='jobApplicant' element={<JobApplicationPgae />} />

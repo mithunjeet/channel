@@ -220,8 +220,8 @@ function MainPage() {
         </div>
 
         <div className="flex flex-wrap justify-center md:justify-end items-center gap-4 w-full md:w-auto">
-          <Link to="/" className="text-lg font-semibold text-gray-700 hover:underline">
-            Home
+          <Link to="/chat" className="text-lg font-semibold text-gray-700 hover:underline">
+            ChatToAnyUser
           </Link>
           <div
             className="text-lg font-semibold text-gray-700 hover:underline cursor-pointer"

@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import JobCard from "./jobCard"; 
-
+import JobCardForManageJob from "./jobCardForManageJob";
 export default function JobSeekerDashboard() {
   const [cookies] = useCookies();
   const [rating, setRating] = useState(0);
@@ -161,7 +161,7 @@ export default function JobSeekerDashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {jobs.map((job, idx) => (
                 <div key={idx} className="w-full">
-                  <JobCard doc={job} />
+                  <JobCardForManageJob doc={job} />
                 </div>
               ))}
             </div>
