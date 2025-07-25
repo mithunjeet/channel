@@ -17,11 +17,8 @@ function ForgotPassword() {
       } 
       const { data } = await axios.post(`${import.meta.env.VITE_URL}/user/forgotPassword`, { email })
       if (data?.message === "opt is send to your email account complete next step") {
- localStorage.setItem("forgotPasswordEmail", email);
-setTimeout(() => {
-  navigate("/otpverifyAfterForgetPassword");
-}, 50);
-
+      localStorage.setItem("forgotPasswordEmail", email)
+      navigate("/otpverifyAfterForgetPassword", { state: { email } }) 
       }         
     } catch (error) {
       console.log(error)

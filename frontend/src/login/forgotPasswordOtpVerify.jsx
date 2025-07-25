@@ -13,16 +13,22 @@ function ForgotPasswordOtpVerify() {
   const navigate = useNavigate()
   const [email, setEmail] = useState("");
     
-  useEffect(() => {
-    const storedEmail = localStorage.getItem("forgotPasswordEmail");
-    if (storedEmail) {
-      setEmail(storedEmail);
-    }
-  }, [])
+useEffect(() => {
+  const stateEmail = location?.state?.email;
+  const storedEmail = localStorage.getItem("forgotPasswordEmail");
+
+  if (stateEmail) {
+    setEmail(stateEmail);
+    localStorage.setItem("forgotPasswordEmail", stateEmail)
+  } else if (storedEmail) {
+    setEmail(storedEmail)
+  }
+}, [location])
+
 
 
   console.log("hii from forgotPasswordOtpVerify")
-  console.log("email", email);
+  console.log("email", email)
   // console.log("email in forgot ForgotPasswordOtpVerify", location?.state?.email)
 
   const handleChangeOtp = (value, index) => {
