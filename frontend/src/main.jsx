@@ -89,7 +89,7 @@ import ProtectedRoute from "./mainpage/middleware.jsx";
 import ForgotPasswordOtpVerify from './login/forgotPasswordOtpVerify.jsx';
 import LoadJobAlreadyToUserLocation from './mainpage/loadAlreadyToUserLocation.jsx';
 import AllJobOfUserApplied from './mainpage/AllJobOfUserApplied.jsx';
-import Chat  from './mainpage/Chat.jsx'
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -110,7 +110,9 @@ const router = createBrowserRouter(
           </ProtectedRoute>
         }
       >
-        <Route path='chat' element={<Chat />} />
+        <Route path='chat' element={<div className='flex  justify-center  items-center'>
+            <div className='text-green-500'> currently working  deployed soon...</div>
+        </div>} />
         <Route path='manageJob' element={<AllJobOfUserApplied />} />
         <Route path='loadJob' element={<LoadJobAlreadyToUserLocation />} />
         <Route path='jobApplicant' element={<JobApplicationPage />} />
