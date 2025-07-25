@@ -275,13 +275,11 @@ const forgotPasswordOtpVerify = async (req, res) => {
 
   await doc.save({ validateBeforeSave: false })
 
- const updateddoc = await User.findOne({ email }).select('-password')
-
-  console.log("hii from restepassword")
-  console.log(updateddoc)
-  if (!updateddoc) return res.status(500).json("something went wrong during process...")
-
-  return res.status(200).json({ message: "login successfully", user : updateddoc })
+    const userafterUpdate = await User.findOne({ email }).select({
+      password: 0,
+    })
+   
+    res.status(200).json({ message: "Account verified successfully", user: userafterUpdate });
 }
  
  
@@ -370,6 +368,7 @@ const uploadAvatar = async (req, res) => {
   return res.status(200).json("avatar has been uploaded successfully");
 }
 
+
 const stopcall = async (req, res) => {
   if (!req?.user?._id) {
     return res.status(404).json("id not found to stop call")
@@ -378,15 +377,15 @@ const stopcall = async (req, res) => {
   const doc = await User.findOne({ _id: req.user._id })
   if (!doc) return res.status(404).json("unauthorized request to stop call")
 
-  doc.stopcall = !doc.stopcall
+  doc.stopCall = !doc.stopCall
   await doc.save({ validateBeforeSave: false })
 
-  if (doc.stopcall) {
+  if (doc.stopCall) {
     return res.status(200).json("Call has been stopped successfully on your phone")
   } else {
     return res.status(200).json("Call has been started on your phone")
   }
 }
-
+  
 
 export {registerUser, verifyOtp , resendotp, login , searchuser, changePassword , uploadAvatar , forgotpassword, forgotPasswordOtpVerify , stopcall }

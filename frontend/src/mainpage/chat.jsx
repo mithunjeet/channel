@@ -1,10 +1,11 @@
+
 function Chat() {
     return (<>
-        <div className="flex w-full h-screen justify-center items-center">
-              <h1 className="text-xl text-red-500cd  font-semibold">currently working deployed soon .. </h1>
+        <div className="flex  justify-center items-center">
+             <h1 className="text-red-400">working deployed soon ..</h1>
 
-      </div>
-    </>)
+       </div>
+    </>)   
 }
 
 export default Chat

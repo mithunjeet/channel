@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState , useEffect} from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useCookies } from "react-cookie"
@@ -11,9 +11,19 @@ function ForgotPasswordOtpVerify() {
   const [cookies, setcookie] = useCookies()
   const location = useLocation()
   const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+    
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("forgotPasswordEmail");
+    if (storedEmail) {
+      setEmail(storedEmail);
+    }
+  }, [])
+
 
   console.log("hii from forgotPasswordOtpVerify")
-  console.log("email in forgot ForgotPasswordOtpVerify", location?.state?.email)
+  console.log("email", email);
+  // console.log("email in forgot ForgotPasswordOtpVerify", location?.state?.email)
 
   const handleChangeOtp = (value, index) => {
     const newOtp = [...otp]
@@ -44,7 +54,7 @@ function ForgotPasswordOtpVerify() {
         alert("Password mismatch")
         return
       }
-      if (!location?.state?.email.trim()) {
+      if (!email.trim()) {
         alert("Email not found. It is a frontend issue from forgot password page...")
         return
       }
@@ -55,21 +65,25 @@ function ForgotPasswordOtpVerify() {
 
       const { data } = await axios.post(
         `${import.meta.env.VITE_URL}/user/otpverifyAfterForgetPassword`,
-        { email: location?.state?.email, otp: otpinnumberformat, password }
+        { email: email, otp: otpinnumberformat, password }
       )
 
       console.log(data)
-      if (data?.message === "login successfully") {
-        setcookie("refreshToken", data?.data, {
-          path: "/",
+      if (data?.message === "Account verified successfully") {
+       localStorage.removeItem("forgotPasswordEmail");
+        setcookie('refreshToken', data, {
+          path: '/',
           maxAge: 7 * 24 * 60 * 60,
-        })
+       
+        });
         navigate("/")
       }
-    } catch (error) {
+    } catch (err) {
       console.log("error in forgot password reset")
-      console.log(error)
-      alert(error?.response?.data?.message || "Something went wrong")
+      console.log(err)
+      // alert(error?.response?.data?.message || "Something went wrong")
+      alert(`${err?.response.data?.message}`)
+         
     } finally {
       setSendRequest(false)
       setOtp(new Array(6).fill(""))
