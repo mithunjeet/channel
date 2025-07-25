@@ -84,22 +84,25 @@ import RateUserForm from './componet_general/Rating.jsx';
 import Comment from './componet_general/Comment.jsx';
 import JobSeekerDashboard from './mainpage/jobSeekerDashbard.jsx';
 import JobApplicationForm from './mainpage/jobApplication.jsx';
-import JobApplicationPgae from './mainpage/jobApplicationPage.jsx';
-import ProtectedRoute from "./mainpage/middleware.jsx"
+import JobApplicationPage from './mainpage/jobApplicationPage.jsx';
+import ProtectedRoute from "./mainpage/middleware.jsx";
 import ForgotPasswordOtpVerify from './login/forgotPasswordOtpVerify.jsx';
-import  LoadJobAlreadyToUserLocation  from './mainpage/loadAlreadyToUserLocation.jsx';
+import LoadJobAlreadyToUserLocation from './mainpage/loadAlreadyToUserLocation.jsx';
 import AllJobOfUserApplied from './mainpage/AllJobOfUserApplied.jsx';
 import Chat from './mainpage/Chat.jsx';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-    
+     
       <Route path='/login' element={<Login />} />
       <Route path='/forgotPassword' element={<ForgotPassword />} />
       <Route path='/register' element={<CreateAccount />} />
       <Route path='/verifyOtp' element={<OTPVerify />} />
       <Route path='/resendOtp' element={<ResendOtp />} />
-      <Route path='/otpverifyAfterForgetPassword' element={ <ForgotPasswordOtpVerify/>} />
+      <Route path='/otpverifyAfterForgetPassword' element={<ForgotPasswordOtpVerify />} />
+
+   
       <Route
         path='/'
         element={
@@ -107,11 +110,11 @@ const router = createBrowserRouter(
             <MainPage />
           </ProtectedRoute>
         }
-      > 
-        <Route path='/chat' element={<Chat/> } />
-        <Route path='/manageJob' element={<AllJobOfUserApplied/> } />
-        <Route path='/loadJob' element={<LoadJobAlreadyToUserLocation />} />
-        <Route path='jobApplicant' element={<JobApplicationPgae />} />
+      >
+        <Route path='chat' element={<Chat />} />
+        <Route path='manageJob' element={<AllJobOfUserApplied />} />
+        <Route path='loadJob' element={<LoadJobAlreadyToUserLocation />} />
+        <Route path='jobApplicant' element={<JobApplicationPage />} />
         <Route path='userprofile' element={<JobSeekerProfile />} />
         <Route path='report/:id' element={<ReportUserForm />} />
         <Route path='rate/:id' element={<RateUserForm />} />
@@ -120,15 +123,26 @@ const router = createBrowserRouter(
         <Route path='dashboard' element={<JobSeekerDashboard />} />
         <Route path='setting' element={<SettingsPage />} />
         <Route path='otherchannel' element={<AllChannel />} />
+        
         <Route path='playlist' element={<DefaultPlaylist />}>
-          <Route path='upload' element={<UploadVideo />} />
+        <Route path='upload' element={<UploadVideo />} />
         </Route>
-      </Route>
+        </Route>
+
+      
+       <Route
+        path="*"
+        element = {
+          <div className="flex justify-center items-center h-screen">
+            <div className="text-red-500 text-xl font-semibold">
+              SORRY PAGE NOT FOUND ... 404 🤔💭
+            </div>
+          </div>
+        }
+      />
     </Route>
   )
 );
-
-
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
