@@ -24,12 +24,12 @@ const generateAccesTokenAndRefreshToken = async (userid)=>{
 const registerUser = async (req, res, next) => {
   try {
 
-    const { username , email , password , service , state , district } = req.body;
+    const { username , email , password , service , state , district , gender , phone } = req.body;
     console.log(username);
     console.log(service)
     console.log(state)
     console.log(district)
-    if (!username?.trim() || !email?.trim() || !password?.trim() || !service.trim() || !state || !district ) {
+    if (!username?.trim() || !email?.trim() || !password?.trim() || !service.trim() || !state || !district || !gender || !phone.trim()  ) {
       return res.status(400).json({ error: "Please fill the field correctly" });
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,6 +37,11 @@ const registerUser = async (req, res, next) => {
       return res.status(400).json({ error: "Invalid email format" });
     }
     
+     const regex = /^(?:\+91|91|0)?[6-9]\d{9}$/
+     const yes  =  regex.test(phone) 
+      
+    if (!yes) return res.status(404).json({ error: "phone number is not in the correct way" });
+
     // const userExists = await User.findOne({ $or: [{ email }, { username }] });
       const userExists = await User.findOne({email });
     if (userExists) {
@@ -59,6 +64,8 @@ const registerUser = async (req, res, next) => {
       password,
       otp,
       otpExpires,
+      phone,
+      gender
     });
     
     

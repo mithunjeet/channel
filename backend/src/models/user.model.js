@@ -67,8 +67,8 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false   
     },
-    mobile : {
-        type : Number
+    phone : {
+        type : String
     },
     gender : {
        type: String,

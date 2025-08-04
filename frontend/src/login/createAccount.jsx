@@ -28,7 +28,7 @@ export default function CreateAccount() {
   console.log(message)
   console.log(service)
   const handleSubmit = async (e) => {
-    if (!email.trim() || !password.trim() || !username.trim() || !service.trim() || !state || !district || !service)
+    if (!email.trim() || !password.trim() || !username.trim() || !service.trim() || !state || !district || !service || !gender || !phone.trim())
     {  
       showEmojiAlert({ message: "All field are required", type: false, sound: false });
       return
@@ -37,7 +37,7 @@ export default function CreateAccount() {
     e.preventDefault();
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_URL}/user/register`, {
-        username, email, password, service , state , district
+        username, email, password, service , state , district , phone , gender
       })
 
       setMessage(data?.message)

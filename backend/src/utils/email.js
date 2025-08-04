@@ -7,8 +7,11 @@ export function mail(){
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSOWORD,
-    },
-  });   
+    }},
+   {
+  logger: true,
+  debug: true
+});   
 }
 
 
