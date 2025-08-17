@@ -99,7 +99,7 @@ export default function JobSeekerDashboard() {
 
           <div className="flex-1 space-y-1">
             <h2 className="text-xl font-semibold">{cookies.refreshToken?.user?.username}</h2>
-            <p className="text-gray-600">📞 .........</p>
+            <p className="text-gray-600">{cookies?.refreshToken?.user?.phone ? `📞${cookies?.refreshToken?.user?.phone }`:"📞 phone no has not provided"  } </p>
             <p className="text-gray-600">
               🏠 {cookies.refreshToken?.user?.state} {cookies.refreshToken?.user?.district}
             </p>

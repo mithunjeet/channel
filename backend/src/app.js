@@ -11,14 +11,14 @@ app.use(cors(
 
 app.use( express.json({
 
-    limit:"1000kb"
-    
+    limit:"50mb",
+    extended :true    
 
 }))
 
 
 app.use(express.urlencoded({
-    limit:"1000kb",
+    limit:"50mb",
     extended:true
 }))
 
@@ -27,8 +27,10 @@ import { reportuser } from "./routes/report.routes.js"
 import { ratingRouter } from "./routes/rating.routes.js"
 import { applyJob } from "./routes/jobApply.route.js"
 import { commentRouter } from "./routes/comment.routes.js"
+import { videoRouter } from "./routes/video.routes.js"
 app.use("/user", userRouter)
 app.use("/report", reportuser)
 app.use("/rate", ratingRouter)
 app.use("/apply", applyJob)
 app.use("/commet", commentRouter)
+app.use("/video", videoRouter)

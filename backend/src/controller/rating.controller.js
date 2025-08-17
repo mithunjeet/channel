@@ -25,7 +25,7 @@ if (!user) return res.status(500).json("some internal error");
   const rated = await Rating.create({
     feedback,
     value : Number(value),
-    owner:req.user._id,
+    owner:req.user._id,  
     user: user
   });
 
