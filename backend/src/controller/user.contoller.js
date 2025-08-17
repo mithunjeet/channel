@@ -278,7 +278,7 @@ const forgotPasswordOtpVerify = async (req, res) => {
   doc.otpExpires = undefined
   doc.isverified = true
   doc.otp = undefined
-  doc.password = await bcrypt.hash(password, 10)
+  doc.password = password
 
   await doc.save({ validateBeforeSave: false })
 
