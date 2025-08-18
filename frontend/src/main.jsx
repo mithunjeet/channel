@@ -89,7 +89,8 @@ import ProtectedRoute from "./mainpage/middleware.jsx";
 import ForgotPasswordOtpVerify from './login/forgotPasswordOtpVerify.jsx';
 import LoadJobAlreadyToUserLocation from './mainpage/loadAlreadyToUserLocation.jsx';
 import AllJobOfUserApplied from './mainpage/AllJobOfUserApplied.jsx';
-
+import VideoResults from './video/Videopage.jsx';
+import WatchVideo from './video/Watchvideo.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -116,6 +117,8 @@ const router = createBrowserRouter(
         <Route path='manageJob' element={<AllJobOfUserApplied />} />
         <Route path='loadJob' element={<LoadJobAlreadyToUserLocation />} />
         <Route path='jobApplicant' element={<JobApplicationPage />} />
+        <Route path='videoresult' element={< VideoResults/>} />
+        <Route path='watch/:id' element={<WatchVideo/>} />
         <Route path='userprofile' element={<JobSeekerProfile />} />
         <Route path='report/:id' element={<ReportUserForm />} />
         <Route path='rate/:id' element={<RateUserForm />} />

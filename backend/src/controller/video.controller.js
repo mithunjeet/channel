@@ -122,4 +122,52 @@ const toggleVideo = async (req, res) => {
 }
 
 
-export {UploadVideo,  videoThatTheUserHasUploaded, deleteVideo , toggleVideo}
+ const searchVideos = async (req, res) => {
+  try {
+    const { query } = req.params
+
+    if (!query || query.trim() === "") {
+      return res.status(400).json({ message: "search query is required" })
+    }
+
+    const results = await Video.aggregate([
+      {
+        $search: {
+          index: "default",
+          text: {
+            query: query,
+            path: ["title" , "description"]
+          },
+        },
+      },
+      {
+        $match: {
+         private : false
+        } 
+      },
+      {
+        $limit: 20, 
+      },
+      {
+        $project: {
+          title: 1,
+          description: 1,
+          thumbnail: 1,
+          videofile: 1,
+          owner: 1,
+          createdAt : 1
+        }
+      }
+    ])
+
+    res.status(200).json(results)
+
+  }
+  catch (error) {
+  
+    res.status(500).json({ message: "server error while searching videos" })
+  }
+}
+
+
+export {UploadVideo,  videoThatTheUserHasUploaded, deleteVideo , toggleVideo, searchVideos}

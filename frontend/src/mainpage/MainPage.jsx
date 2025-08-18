@@ -5,10 +5,11 @@ import { roles } from "../location_data";
 import { location } from "../location_data";
 import { useCookies } from "react-cookie";
 import JobCard from "./jobCard";
+
 function MainPage() {
-  const [searchMode, setSearchMode] = useState("user");
-  const [searchname, setSearch] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [searchMode, setSearchMode] = useState("user")
+  const [searchname, setSearch] = useState("")
+  const [selectedRole, setSelectedRole] = useState("")
   const [selectedState, setSelectedState] = useState("")
   const [selectedDistrict, setSelectedDistrict] = useState("")
   const [district, setDistrict] = useState([])
@@ -16,17 +17,14 @@ function MainPage() {
   const [cookies, setCookies] = useCookies(["refreshToken"])
   const [locationJobs, setLocationJobs] = useState([])
   const navigate = useNavigate()
-  const tracklocation = useLocation() //track the current  routes
+  const tracklocation = useLocation()
 
   const loadJobToCurrentUserLocationAlReady = async () => {
     try {
       const state = cookies.refreshToken?.user?.state;
       const district = cookies.refreshToken?.user?.district;
 
-      if (!state || !district) {
-        console.warn("Missing location in cookies");
-        return;
-      }
+      if (!state || !district) return
 
       const { data } = await axios.get(
         `${import.meta.env.VITE_URL}/apply/getJobOfUserLocation`,
@@ -39,7 +37,6 @@ function MainPage() {
       );
 
       setLocationJobs(data);
-      console.log(data)
     } catch (error) {
       console.error("Error fetching jobs ", error);
     }
@@ -65,18 +62,35 @@ function MainPage() {
       );
       setSearch("");
       if (typeof data === "string") {
-        return alert("No user found with this name. Try another name.");
+        return alert("no user found with this name. Try another name.");
       }
-      if (
-        data?.message === "query for user found successfully" &&
-        data?.flag === "user"
-      ) {
-        navigate("/userprofile", {
-          state: data?.doc,
-        });
+      if (data?.message === "query for user found successfully" && data?.flag === "user") {
+        navigate("/userprofile", { state: data?.doc })
       }
     } catch (error) {
-      console.log("Error during user search: " + error);
+      console.log("error during user search ")
+    }
+  }
+
+
+  async function handlevideosearch(e) {
+    e.preventDefault()
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_URL}/video/search/${searchname}`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.refreshToken?.user?.refreshtoken}`,
+          },
+        }
+      );
+      setSearch("")
+      if (!data || data.length === 0) {
+        return alert("no video found with this title and description")
+      }
+      navigate("/videoresult", { state: data })
+    } catch (error) {
+      console.log("error during video search ")
     }
   }
 
@@ -131,14 +145,12 @@ function MainPage() {
             >
               <option value="user">User</option>
               <option value="job">Job Role</option>
+              <option value="video">Video</option> 
             </select>
           </div>
 
-          {searchMode === "user" ? (
-            <form
-              onSubmit={handlesearch}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full"
-            >
+          {searchMode === "user" && (
+            <form onSubmit={handlesearch} className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 placeholder="Search by user name..."
@@ -146,18 +158,29 @@ function MainPage() {
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full sm:w-80 p-2 border border-gray-300 rounded focus:outline-none"
               />
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full sm:w-auto"
-                type="submit"
-              >
+              <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                 Search
               </button>
             </form>
-          ) : (
-            <form
-              onSubmit={handleJobSearch}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2"
-            >
+          )}
+
+          {searchMode === "video" && (
+            <form onSubmit={handlevideosearch} className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                placeholder="Search video title or video description..."
+                value={searchname}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full sm:w-80 p-2 border border-gray-300 rounded focus:outline-none"
+              />
+              <button  type="submit" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                Search Video
+              </button>
+            </form>
+          )}
+
+          {searchMode === "job" && (
+            <form onSubmit={handleJobSearch} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
               <select
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value)}
@@ -223,65 +246,56 @@ function MainPage() {
           <Link to="/chat" className="text-lg font-semibold text-gray-700 hover:underline">
             ChatToAnyUser
           </Link>
-          <div
-            className="text-lg font-semibold text-gray-700 hover:underline cursor-pointer"
+        
+          <Link to="/dashboard" className="text-lg font-semibold text-gray-700 hover:underline">
+            Dashboard
+          </Link>
+            <div
+            className="text-lg text-red-500 font-semibold  hover:underline cursor-pointer"
             onClick={handlelogout}
           >
             Logout
           </div>
-          <Link to="/dashboard" className="text-lg font-semibold text-gray-700 hover:underline">
-            Dashboard
-          </Link>
-            <div>
-{cookies?.refreshToken?.user?.avatar ? (
-   <img
-  src={cookies?.refreshToken?.user?.avatar}
-  alt="User Avatar"
-  className="w-14 h-14 rounded-full object-cover border border-gray-300 shadow-sm"
-/>
-
-  ) : (
-    <div className="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center text-lg font-semibold">
-      {cookies?.refreshToken?.user?.username?.charAt(0).toUpperCase()}
-    </div>
-  )}
-</div>
-
+          <div>
+            {cookies?.refreshToken?.user?.avatar ? (
+              <img
+                src={cookies?.refreshToken?.user?.avatar}
+                alt="User Avatar"
+                className="w-14 h-14 rounded-full object-cover border border-gray-300 shadow-sm"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center text-lg font-semibold">
+                {cookies?.refreshToken?.user?.username?.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
+   
       <main className="grow max-w-5xl mx-auto w-full px-4 py-6">
-      
         {tracklocation.pathname === "/" && (
           <div className="mb-6">
-         
- {locationJobs.length === 0 ? (
-<div className="flex items-center justify-center w-full h-screen bg-gray-50 px-4">
-  <p className="text-gray-700 text-lg md:text-xl font-medium text-center max-w-md">
-    📌  No jobs available for your current location.
-  </p>
-</div>
-
-
+            {locationJobs.length === 0 ? (
+              <div className="flex items-center justify-center w-full h-screen bg-gray-50 px-4">
+                <p className="text-gray-700 text-lg md:text-xl font-medium text-center max-w-md">
+                  📌  No jobs available for your current location.
+                </p>
+              </div>
             ) : (
-
- <div className="w-full px-4 sm:px-6 lg:px-8">
-  <h1 className="text-base text-center underline underline-offset-1   sm:text-lg font-semibold mb-4 text-gray-700">
-    Jobs In Your Locality
-    </h1>
-              
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 text-sm">
-    {locationJobs.map((info , index) => (
-      <JobCard key={index} doc={info} />
-    ))}
-                    
-  </div>
-</div>
-
+              <div className="w-full px-4 sm:px-6 lg:px-8">
+                <h1 className="text-base text-center underline underline-offset-1 sm:text-lg font-semibold mb-4 text-gray-700">
+                  Jobs In Your Locality
+                </h1>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 text-sm">
+                  {locationJobs.map((info, index) => (
+                    <JobCard key={index} doc={info} />
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         )}
-
         <Outlet />
       </main>
 
@@ -296,6 +310,8 @@ function MainPage() {
 }
 
 export default MainPage;
+
+
 
 
 
