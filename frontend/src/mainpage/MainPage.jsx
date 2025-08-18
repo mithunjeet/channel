@@ -150,31 +150,31 @@ function MainPage() {
           </div>
 
           {searchMode === "user" && (
-            <form onSubmit={handlesearch} className="flex flex-col sm:flex-row gap-2">
+            <form onSubmit={handlesearch} className="flex flex-col sm:flex-row ">
               <input
                 type="text"
                 placeholder="Search by user name..."
                 value={searchname}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full sm:w-80 p-2 border border-gray-300 rounded focus:outline-none"
+                className="w-full sm:w-80 p-2 border border-gray-300 rounded-l focus:outline-none"
               />
-              <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+              <button className="bg-blue-500  text-white px-4 py-2 rounded-r hover:bg-blue-600">
                 Search
               </button>
             </form>
           )}
 
           {searchMode === "video" && (
-            <form onSubmit={handlevideosearch} className="flex flex-col sm:flex-row gap-2">
+            <form onSubmit={handlevideosearch} className="flex flex-col sm:flex-row ">
               <input
                 type="text"
                 placeholder="Search video title or video description..."
                 value={searchname}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full sm:w-80 p-2 border border-gray-300 rounded focus:outline-none"
+                className="w-full sm:w-80 p-2 border border-gray-300 rounded-l focus:outline-none"
               />
-              <button  type="submit" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                Search Video
+              <button  type="submit" className="bg-green-500 text-white px-4 py-2 rounded-r hover:bg-green-600">
+                Search
               </button>
             </form>
           )}

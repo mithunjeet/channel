@@ -75,14 +75,14 @@ export const getAllJobApplicant = async (req, res) => {
       }
     ];
 
-    if (role?.trim()) {
-      shouldConditions.push({
-        text: {
-          query: role,
-          path: "role"
-        }
-      });
-    }
+    // if (role?.trim()) {
+    //   shouldConditions.push({
+    //     text: {
+    //       query: role,
+    //       path: "role"
+    //     }
+    //   });
+    // }
 
     const data = await JobApply.aggregate([
       {
